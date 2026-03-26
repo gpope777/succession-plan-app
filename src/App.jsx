@@ -10,6 +10,7 @@ import HPO from './pages/HPO'
 import TalentCard from './pages/TalentCard'
 import TalentCardForm from './pages/TalentCardForm'
 import Rubricas from './pages/Rubricas'
+import FeedbackBox from './pages/FeedbackBox'
 import BancaTalento from './pages/BancaTalento'
 import Calidad from './pages/Calidad'
 
@@ -30,7 +31,8 @@ export default function App() {
       case 'talentcard': return <TalentCardForm {...pageProps} />
       case 'talent':     return <TalentCard {...pageProps} />
       case 'banca':   return <BancaTalento {...pageProps} />
-      case 'calidad': return <Calidad {...pageProps} />
+      case 'calidad':   return <Calidad      {...pageProps} />
+      case 'feedback':  return <FeedbackBox  {...pageProps} />
       default:        return <Home    {...pageProps} />
     }
   }

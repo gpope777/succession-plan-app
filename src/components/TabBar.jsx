@@ -8,6 +8,7 @@ const TABS = [
   { id: 'talent',     label: 'Perfiles & IDP',         icon: 'PP' },
   { id: 'banca',      label: 'Banca de Talento',       icon: 'BT' },
   { id: 'calidad',    label: 'Análisis de Calidad',    icon: 'CA' },
+  { id: 'feedback',   label: 'Buzón de Feedback',      icon: '📬' },
 ]
 
 export default function TabBar({ activeTab, onTabChange }) {
