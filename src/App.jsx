@@ -9,15 +9,16 @@ import Marco from './pages/Marco'
 import HPO from './pages/HPO'
 import TalentCard from './pages/TalentCard'
 import TalentCardForm from './pages/TalentCardForm'
+import Rubricas from './pages/Rubricas'
 import BancaTalento from './pages/BancaTalento'
 import Calidad from './pages/Calidad'
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home')
   const [adminMode, setAdminMode] = useState(false)
-  const { data, updateCollaborator, addCollaborator, importData, resetData } = useData()
+  const { data, updateCollaborator, addCollaborator, updateHeatmap, importData, resetData } = useData()
 
-  const pageProps = { data, adminMode, updateCollaborator, addCollaborator, onTabChange: setActiveTab }
+  const pageProps = { data, adminMode, updateCollaborator, addCollaborator, updateHeatmap, onTabChange: setActiveTab }
 
   const renderPage = () => {
     switch (activeTab) {
@@ -25,6 +26,7 @@ export default function App() {
       case 'valores': return <Valores {...pageProps} />
       case 'marco':   return <Marco   {...pageProps} />
       case 'hpo':     return <HPO     {...pageProps} />
+      case 'rubricas':   return <Rubricas    {...pageProps} />
       case 'talentcard': return <TalentCardForm {...pageProps} />
       case 'talent':     return <TalentCard {...pageProps} />
       case 'banca':   return <BancaTalento {...pageProps} />

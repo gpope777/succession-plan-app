@@ -55,5 +55,23 @@ export function useData() {
     }
   }
 
-  return { data, setData, updateCollaborator, addCollaborator, updateMeta, updateHeatmap, importData, resetData }
+  const updateRubricEvaluation = (collabId, rubricData) => {
+    // rubricData contains: nineBox, readinessPercentage, readinessStatus, rubricScores
+    setData(prev => {
+      const newCollabs = prev.collaborators.map(c =>
+        c.id === collabId
+          ? {
+              ...c,
+              nineBox: rubricData.nineBox ?? c.nineBox,
+              readinessPercentage: rubricData.readinessPercentage ?? c.readinessPercentage,
+              readinessStatus: rubricData.readinessStatus ?? c.readinessStatus,
+              rubricScores: rubricData.rubricScores,
+            }
+          : c
+      )
+      return { ...prev, collaborators: newCollabs }
+    })
+  }
+
+  return { data, setData, updateCollaborator, addCollaborator, updateMeta, updateHeatmap, updateRubricEvaluation, importData, resetData }
 }
