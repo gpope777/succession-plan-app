@@ -47,7 +47,9 @@ export default function App() {
       />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
       <div className="content-area">
-        {renderPage()}
+        <div className="page">
+          {renderPage()}
+        </div>
       </div>
       <StatusBar data={data} adminMode={adminMode} />
     </div>
