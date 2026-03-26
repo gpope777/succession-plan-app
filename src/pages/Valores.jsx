@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ValoresChat from '../components/ValoresChat'
 
 const VALUES = [
   {
@@ -346,6 +347,7 @@ export default function Valores() {
           50%       { border-color: #86efac; }
         }
       `}</style>
+      <ValoresChat />
     </div>
   )
 }
