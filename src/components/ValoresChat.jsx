@@ -1,101 +1,47 @@
 import { useState, useRef, useEffect } from 'react'
-import { KB, SUGGESTED } from '../data/valoresKB'
 
-// ─── Matching Engine ─────────────────────────────────────────────────────────────
-
-function normalize(text) {
-  return text
-    .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // remove accents
-    .replace(/[^a-z0-9\s]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
-
-const STOP_WORDS = new Set([
-  'el','la','los','las','un','una','unos','unas','de','del','al',
-  'en','con','por','para','que','es','son','se','me','te','le',
-  'lo','y','o','a','como','que','hay','si','no','su','sus','mi',
-  'mas','pero','cuando','donde','cual','quien','esto','eso',
-  'como','sobre','entre','hasta','desde','muy','tan','cada',
-])
-
-function extractKeywords(text) {
-  return normalize(text)
-    .split(' ')
-    .filter(w => w.length >= 4 && !STOP_WORDS.has(w))
-}
-
-function scoreEntry(entry, userKeywords, normInput) {
-  let score = 0
-
-  // 1. Full-phrase match in the raw normalized input — highest confidence signal
-  //    e.g. user types "seguridad psicologica" → finds trigger "seguridad psicologica"
-  for (const trigger of entry.triggers) {
-    const normTrigger = normalize(trigger)
-    if (normInput.includes(normTrigger)) {
-      // Weight by phrase length so longer matches score higher
-      score += normTrigger.split(' ').length * 14
-    }
-  }
-
-  // 2. Word-level exact match — no substring tricks to avoid false positives
-  //    Build a set of individual words from all triggers (min length 4 to skip noise)
-  const triggerWords = new Set(
-    entry.triggers
-      .flatMap(t => normalize(t).split(' '))
-      .filter(w => w.length >= 4)
-  )
-  for (const kw of userKeywords) {
-    if (triggerWords.has(kw)) score += 8
-  }
-
-  // 3. Title word match — secondary signal
-  const titleWords = normalize(entry.title).split(' ').filter(w => w.length >= 4)
-  for (const kw of userKeywords) {
-    if (titleWords.includes(kw)) score += 4
-  }
-
-  return score
-}
-
-function findMatch(userInput) {
-  const normInput = normalize(userInput)
-  const keywords  = extractKeywords(userInput)
-  if (keywords.length === 0) return null
-
-  let best = null
-  let bestScore = 0
-
-  for (const entry of KB) {
-    const s = scoreEntry(entry, keywords, normInput)
-    if (s > bestScore) { bestScore = s; best = entry }
-  }
-
-  // Require a meaningful score — prevents weak single-word coincidences from firing
-  return bestScore >= 12 ? best : null
-}
-
-function buildResponse(entry) {
-  return {
-    type: 'bot',
-    title: entry.title,
-    authors: entry.authors,
-    text: entry.response,
-    id: Date.now() + Math.random(),
-  }
-}
-
-const FALLBACKS = [
-  'Puedo ayudarte con temas como seguridad psicológica, mentalidad de crecimiento, liderazgo, motivación, feedback, comunicación efectiva, bienestar y más. ¿Sobre cuál te gustaría aprender?',
-  'No encontré una coincidencia exacta para eso. Prueba preguntar sobre un valor específico o un concepto como "engagement", "burnout", "confianza" o "innovación".',
-  'Puedo consultar mi base de conocimiento científica sobre: Edmondson, Dweck, Hackman, Pink, Covey, Amabile, Seligman, Lencioni y muchos más. ¿Qué quieres explorar?',
+// ─── Suggested starter questions ─────────────────────────────────────────────
+const SUGGESTED = [
+  '¿Qué dice la ciencia sobre la seguridad psicológica en equipos?',
+  '¿Cómo desarrollar una mentalidad de crecimiento en el equipo?',
+  '¿Qué motiva realmente a las personas en el trabajo?',
+  '¿Cómo construir confianza dentro de un equipo?',
+  '¿Qué dice la investigación sobre el liderazgo efectivo?',
+  '¿Cómo dar feedback que realmente genere cambio?',
+  '¿Qué es el bienestar organizacional y cómo se mide?',
+  '¿Cómo prevenir el burnout en equipos de alto rendimiento?',
+  '¿Qué diferencia a los equipos de alto desempeño?',
+  '¿Cómo fomentar la innovación y creatividad en el trabajo?',
+  '¿Qué dice Lencioni sobre las disfunciones de equipo?',
+  '¿Cómo crear una cultura organizacional sólida?',
+  '¿Qué es la teoría de la autodeterminación de Deci y Ryan?',
+  '¿Cómo manejar conversaciones difíciles en el trabajo?',
+  '¿Qué dice Project Aristotle sobre equipos efectivos?',
 ]
-let fallbackIdx = 0
 
-// ─── Message Renderer ─────────────────────────────────────────────────────────────
+// ─── Message Renderer ─────────────────────────────────────────────────────────
 function BotMessage({ msg }) {
-  const paragraphs = msg.text.split('\n\n').filter(Boolean)
+  // Convert **bold** markdown and render paragraphs / bullet lists
+  const renderParagraph = (para, i) => {
+    const html = para.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    if (para.match(/^[•\-\*]\s/m)) {
+      const items = para.split('\n').filter(Boolean)
+      return (
+        <ul key={i} style={{ margin: '8px 0', paddingLeft: 18, listStyle: 'none' }}>
+          {items.map((item, j) => (
+            <li key={j} style={{ fontSize: 13, color: '#374151', marginBottom: 5, lineHeight: 1.55, display: 'flex', gap: 6 }}>
+              <span style={{ color: '#0d9488', flexShrink: 0 }}>▸</span>
+              <span dangerouslySetInnerHTML={{ __html: item.replace(/^[•\-\*]\s*/, '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') }} />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    return (
+      <p key={i} style={{ fontSize: 13, color: '#374151', lineHeight: 1.65, margin: '7px 0' }}
+        dangerouslySetInnerHTML={{ __html: html }} />
+    )
+  }
 
   return (
     <div style={{
@@ -106,40 +52,10 @@ function BotMessage({ msg }) {
       boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
       border: '1px solid #e2e8f0',
     }}>
-      {msg.title && (
-        <div style={{ fontWeight: 800, fontSize: 15, color: '#0f172a', marginBottom: 4 }}>
-          {msg.title}
-        </div>
-      )}
-      {msg.authors && (
-        <div style={{
-          fontSize: 11, color: '#7c3aed', fontWeight: 600,
-          marginBottom: 12, fontStyle: 'italic',
-        }}>
-          📚 {msg.authors}
-        </div>
-      )}
-      {paragraphs.map((para, i) => {
-        // Render bold **text**
-        const rendered = para.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        if (para.startsWith('• ') || para.startsWith('- ')) {
-          const items = para.split('\n').filter(Boolean)
-          return (
-            <ul key={i} style={{ margin: '8px 0', paddingLeft: 18, listStyle: 'none' }}>
-              {items.map((item, j) => (
-                <li key={j} style={{ fontSize: 13, color: '#374151', marginBottom: 5, lineHeight: 1.55, display: 'flex', gap: 6 }}>
-                  <span style={{ color: '#0d9488', flexShrink: 0 }}>▸</span>
-                  <span dangerouslySetInnerHTML={{ __html: item.replace(/^[•\-]\s*/, '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') }} />
-                </li>
-              ))}
-            </ul>
-          )
-        }
-        return (
-          <p key={i} style={{ fontSize: 13, color: '#374151', lineHeight: 1.6, margin: '8px 0' }}
-            dangerouslySetInnerHTML={{ __html: rendered }} />
-        )
-      })}
+      {msg.error
+        ? <p style={{ fontSize: 13, color: '#ef4444', margin: 0 }}>{msg.text}</p>
+        : msg.text.split('\n\n').filter(Boolean).map(renderParagraph)
+      }
     </div>
   )
 }
@@ -181,25 +97,24 @@ function TypingIndicator() {
   )
 }
 
-// ─── Main Chat Component ──────────────────────────────────────────────────────────
+// ─── Main Chat Component ───────────────────────────────────────────────────────
 export default function ValoresChat() {
   const [open,     setOpen]     = useState(false)
   const [messages, setMessages] = useState([
     {
       type: 'bot',
       id: 'welcome',
-      title: '👋 Hola, soy tu asistente de valores organizacionales',
-      authors: 'Base de conocimiento: Edmondson · Dweck · Hackman · Pink · Covey · Amabile · Seligman · Lencioni y más',
-      text: 'Puedo ayudarte a entender cómo la ciencia explica los valores que guían nuestro equipo y qué dice la investigación sobre comportamiento organizacional.\n\nPuedes preguntarme sobre seguridad psicológica, mentalidad de crecimiento, liderazgo, motivación, feedback, bienestar, comunicación efectiva y mucho más. ¿Qué quieres explorar hoy?',
+      text: 'Hola 👋 Soy tu asistente de valores y comportamiento organizacional.\n\nPuedo ayudarte a entender qué dice la ciencia sobre liderazgo, seguridad psicológica, motivación, feedback, bienestar, cultura, confianza, innovación y mucho más.\n\n¿Qué quieres explorar hoy?',
     },
   ])
   const [input,    setInput]    = useState('')
   const [typing,   setTyping]   = useState(false)
   const [shown,    setShown]    = useState([])
+  // Conversation history for multi-turn context (Gemini format)
+  const historyRef  = useRef([])
   const messagesEnd = useRef(null)
   const inputRef    = useRef(null)
 
-  // Pick 4 random suggested questions on open
   useEffect(() => {
     if (open && shown.length === 0) {
       const shuffled = [...SUGGESTED].sort(() => Math.random() - 0.5).slice(0, 4)
@@ -212,40 +127,65 @@ export default function ValoresChat() {
     messagesEnd.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, typing])
 
-  const sendMessage = (text) => {
-    if (!text.trim()) return
+  const sendMessage = async (text) => {
+    if (!text.trim() || typing) return
+
     const userMsg = { type: 'user', text: text.trim(), id: Date.now() }
     setMessages(m => [...m, userMsg])
     setInput('')
     setTyping(true)
 
-    // Simulate thinking delay (400-900ms)
-    const delay = 400 + Math.random() * 500
-    setTimeout(() => {
-      const match = findMatch(text)
-      let botMsg
-      if (match) {
-        botMsg = buildResponse(match)
-      } else {
-        botMsg = {
-          type: 'bot',
-          id: Date.now() + 1,
-          text: FALLBACKS[fallbackIdx % FALLBACKS.length],
-        }
-        fallbackIdx++
+    // Snapshot history BEFORE adding current turn
+    const historySnapshot = [...historyRef.current]
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text.trim(),
+          history: historySnapshot,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok || data.error) {
+        throw new Error(data.error || `HTTP ${res.status}`)
       }
-      setMessages(m => [...m, botMsg])
+
+      // Add to conversation history for future turns
+      historyRef.current = [
+        ...historySnapshot,
+        { role: 'user',  text: text.trim() },
+        { role: 'model', text: data.text },
+      ]
+
+      setMessages(m => [...m, {
+        type: 'bot',
+        id: Date.now() + 1,
+        text: data.text,
+      }])
+
+    } catch (err) {
+      console.error('Chat error:', err)
+      setMessages(m => [...m, {
+        type: 'bot',
+        id: Date.now() + 1,
+        error: true,
+        text: err.message.includes('API key')
+          ? '⚙️ El asistente aún no está configurado. Un administrador debe agregar el GEMINI_API_KEY en Vercel.'
+          : '⚠️ No pude conectarme al asistente ahora mismo. Verifica tu conexión e intenta de nuevo.',
+      }])
+    } finally {
       setTyping(false)
-      // Refresh suggestions
       setShown([...SUGGESTED].sort(() => Math.random() - 0.5).slice(0, 4))
-    }, delay)
+    }
   }
 
   const handleKey = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input) }
   }
-
-  const pendingCount = messages.filter(m => m.type === 'user').length
 
   return (
     <>
@@ -278,15 +218,6 @@ export default function ValoresChat() {
           title="Asistente de valores organizacionales"
         >
           💬
-          {pendingCount > 0 && (
-            <span style={{
-              position: 'absolute', top: 0, right: 0,
-              width: 18, height: 18, borderRadius: '50%',
-              background: '#ef4444', color: 'white',
-              fontSize: 10, fontWeight: 800,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>{pendingCount > 9 ? '9+' : pendingCount}</span>
-          )}
         </button>
       )}
 
@@ -294,7 +225,7 @@ export default function ValoresChat() {
       {open && (
         <div style={{
           position: 'fixed', bottom: 20, right: 20,
-          width: 400, height: 580,
+          width: 420, height: 600,
           background: '#f8fafc',
           borderRadius: 20,
           boxShadow: '0 12px 48px rgba(0,0,0,0.22)',
@@ -311,17 +242,17 @@ export default function ValoresChat() {
             display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
           }}>
             <div style={{
-              width: 36, height: 36, borderRadius: '50%',
+              width: 38, height: 38, borderRadius: '50%',
               background: 'rgba(255,255,255,0.2)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 18,
+              fontSize: 20,
             }}>🧠</div>
             <div style={{ flex: 1 }}>
               <div style={{ color: 'white', fontWeight: 800, fontSize: 14 }}>
                 Asistente de Valores
               </div>
-              <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 11 }}>
-                Literatura científica · Siempre disponible · Sin costo
+              <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: 11 }}>
+                IA · Literatura científica organizacional
               </div>
             </div>
             <button
@@ -378,7 +309,7 @@ export default function ValoresChat() {
                   onMouseEnter={e => { e.currentTarget.style.borderColor = '#0d9488'; e.currentTarget.style.color = '#0d9488' }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#475569' }}
                 >
-                  {q.length > 45 ? q.slice(0, 43) + '…' : q}
+                  {q.length > 48 ? q.slice(0, 46) + '…' : q}
                 </button>
               ))}
             </div>
@@ -400,7 +331,7 @@ export default function ValoresChat() {
               style={{
                 flex: 1, resize: 'none', border: '1.5px solid #e2e8f0',
                 borderRadius: 12, padding: '10px 13px',
-                fontSize: 13, fontFamily: 'Inter, sans-serif',
+                fontSize: 13, fontFamily: 'inherit',
                 outline: 'none', lineHeight: 1.5,
                 maxHeight: 90, overflowY: 'auto',
                 transition: 'border-color 0.15s',
@@ -414,7 +345,8 @@ export default function ValoresChat() {
               style={{
                 width: 38, height: 38, borderRadius: 12, border: 'none',
                 background: input.trim() && !typing ? '#0d9488' : '#e2e8f0',
-                color: 'white', fontSize: 16, cursor: input.trim() && !typing ? 'pointer' : 'not-allowed',
+                color: 'white', fontSize: 16,
+                cursor: input.trim() && !typing ? 'pointer' : 'not-allowed',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0, transition: 'background 0.15s',
               }}
