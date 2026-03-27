@@ -5,6 +5,23 @@ const COLOR_MAP = { teal: 'var(--teal)', purple: 'var(--purple)', amber: 'var(--
 const STATUS_CYCLE = { pending: 'inprogress', inprogress: 'done', done: 'pending' }
 const STATUS_LABEL = { pending: '○', inprogress: '◔', done: '✓' }
 
+function getNineBoxProfile(perf, pot) {
+  const p = perf >= 4 ? 'high' : perf >= 3 ? 'mid' : 'low'
+  const q = pot  >= 4 ? 'high' : pot  >= 3 ? 'mid' : 'low'
+  const map = {
+    'high-high': { label: 'Estrella',              icon: '🌟', desc: 'Alto desempeño y alto potencial. Candidato prioritario para roles de liderazgo y sucesión.', color: '#065f46', bg: '#d1fae5', border: '#6ee7b7' },
+    'high-mid':  { label: 'Empleado Confiable',    icon: '🔒', desc: 'Alto desempeño con potencial moderado. Pilar fundamental del equipo y garante de la continuidad.', color: '#1e40af', bg: '#dbeafe', border: '#93c5fd' },
+    'high-low':  { label: 'Experto Técnico',       icon: '🏆', desc: 'Alto desempeño sostenido. Su experiencia especializada es un activo crítico del departamento.', color: '#1e3a5f', bg: '#e0f2fe', border: '#7dd3fc' },
+    'mid-high':  { label: 'Estrella Futura',       icon: '🚀', desc: 'Alto potencial en desarrollo. Inversión estratégica de mediano plazo con alto retorno esperado.', color: '#6b21a8', bg: '#f3e8ff', border: '#c4b5fd' },
+    'mid-mid':   { label: 'Empleado Sólido',       icon: '✅', desc: 'Desempeño y potencial consistentes. Contribuye de manera estable y confiable al equipo.', color: '#92400e', bg: '#fef3c7', border: '#fcd34d' },
+    'mid-low':   { label: 'Profesional Estable',   icon: '📊', desc: 'Desempeño aceptable con potencial limitado actualmente. Rol definido y valor operativo claro.', color: '#374151', bg: '#f3f4f6', border: '#d1d5db' },
+    'low-high':  { label: 'Diamante en Bruto',     icon: '💎', desc: 'Alto potencial con desempeño aún bajo. Requiere coaching enfocado y oportunidades de desarrollo.', color: '#7c3aed', bg: '#ede9fe', border: '#a78bfa' },
+    'low-mid':   { label: 'En Desarrollo',         icon: '⚠️', desc: 'Desempeño por debajo de lo esperado. Requiere plan de mejora activo y seguimiento cercano.', color: '#b45309', bg: '#fff7ed', border: '#fbbf24' },
+    'low-low':   { label: 'Atención Requerida',    icon: '🔴', desc: 'Bajo desempeño y potencial limitado en el rol actual. Intervención inmediata necesaria.', color: '#dc2626', bg: '#fee2e2', border: '#fca5a5' },
+  }
+  return map[`${p}-${q}`] || map['mid-mid']
+}
+
 function NineBox({ perf, pot }) {
   const colors = [
     '#d6dada','#c5d4f5','#1D9E75',
@@ -26,22 +43,30 @@ function NineBox({ perf, pot }) {
           className={`ninebox-cell ${isOccupied ? 'occupied' : ''}`}
           style={{ background: colors[qi] }}
         >
-          {isOccupied ? '⭐' : ''}
+          {isOccupied && (
+            <div style={{
+              width: 28, height: 28, borderRadius: '50%',
+              background: 'linear-gradient(135deg, #fde047, #f59e0b)',
+              border: '3px solid white',
+              boxShadow: '0 0 10px rgba(251,191,36,0.9), 0 0 20px rgba(251,191,36,0.5)',
+              flexShrink: 0,
+            }} />
+          )}
         </div>
       )
     }
   }
   return (
     <div>
-      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 6, textAlign: 'center', textTransform: 'uppercase', letterSpacing: 1 }}>Matriz 9-Box</div>
-      <div style={{ display: 'flex', gap: 8 }}>
+      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 8, textAlign: 'center', textTransform: 'uppercase', letterSpacing: 1 }}>Matriz 9-Box</div>
+      <div style={{ display: 'flex', gap: 10 }}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', paddingBottom: 4 }}>
           <div style={{ fontSize: 11, color: 'var(--text-muted)', writingMode: 'vertical-lr', transform: 'rotate(180deg)', textAlign: 'center' }}>Potencial Alto</div>
           <div style={{ fontSize: 11, color: 'var(--text-muted)', writingMode: 'vertical-lr', transform: 'rotate(180deg)', textAlign: 'center' }}>Bajo</div>
         </div>
-        <div>
+        <div style={{ flex: 1 }}>
           <div className="ninebox-grid">{cells}</div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
             <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Desempeño Bajo</div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Alto</div>
           </div>
@@ -366,9 +391,11 @@ export default function TalentCard({ data, adminMode, updateCollaborator }) {
 
           {/* 9-Box sidebar */}
           <div style={{ paddingTop: 2 }}>
-            <div className="card card-p" style={{ width: 320 }}>
+            <div className="card card-p" style={{ width: 370, padding: '20px 24px' }}>
               <NineBox perf={collab.nineBox.performance} pot={collab.nineBox.potential} />
-              <div style={{ marginTop: 14, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+
+              {/* Scores */}
+              <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                 <div style={{ background: 'var(--gray-1)', borderRadius: 8, padding: '10px', textAlign: 'center' }}>
                   <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--navy)' }}>{collab.nineBox.performance}</div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Desempeño</div>
@@ -378,8 +405,30 @@ export default function TalentCard({ data, adminMode, updateCollaborator }) {
                   <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Potencial</div>
                 </div>
               </div>
-              <div style={{ marginTop: 10, fontSize: 12, color: 'var(--text-muted)', textAlign: 'center' }}>
-                Escala 1–5 · Clic en IDP para actualizar estados
+
+              {/* Profile label */}
+              {(() => {
+                const profile = getNineBoxProfile(collab.nineBox.performance, collab.nineBox.potential)
+                return (
+                  <div style={{
+                    marginTop: 12,
+                    background: profile.bg,
+                    border: `1.5px solid ${profile.border}`,
+                    borderRadius: 10,
+                    padding: '12px 14px',
+                  }}>
+                    <div style={{ fontSize: 15, fontWeight: 800, color: profile.color, marginBottom: 4 }}>
+                      {profile.icon} {profile.label}
+                    </div>
+                    <div style={{ fontSize: 12, color: profile.color, lineHeight: 1.55, opacity: 0.85 }}>
+                      {profile.desc}
+                    </div>
+                  </div>
+                )
+              })()}
+
+              <div style={{ marginTop: 10, fontSize: 11, color: 'var(--text-muted)', textAlign: 'center' }}>
+                Escala 1–5 · Editar en IDP para actualizar
               </div>
             </div>
           </div>
