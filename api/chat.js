@@ -52,7 +52,7 @@ export default async function handler(req, res) {
   contents.push({ role: 'user', parts: [{ text: message.trim() }] })
 
   const geminiUrl =
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`
 
   let geminiRes
   try {
