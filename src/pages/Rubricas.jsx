@@ -608,6 +608,328 @@ const BASELINES = {
   Director:    { liderazgo: 5, gestion: 5, comunicacion: 5, tecnico: 5, cumplimiento: 5 },
 }
 
+// ─── Potential Rubric Dimensions ──────────────────────────────────────────────
+const POTENTIAL_DIMS = [
+  {
+    id: 'aprendizaje',
+    name: 'Agilidad de Aprendizaje',
+    code: 'P1',
+    weight: 0.40,
+    weightLabel: '40%',
+    icon: '🧠',
+    definition: 'Capacidad de aprender rápido de experiencias nuevas, desaprender lo que ya no sirve y aplicar ese aprendizaje efectivamente en situaciones cambiantes o desconocidas. Es el predictor más fuerte de potencial de liderazgo a largo plazo (Lombardo & Eichinger, Korn Ferry).',
+    evalAxis: 'Velocidad de aprendizaje, transferencia entre contextos, tolerancia a la ambigüedad, disposición a desaprender, búsqueda activa de retos.',
+    levels: [
+      {
+        score: 1, label: 'Limitada', sublabel: 'Zona de confort rígida',
+        behaviors: [
+          'Aprende principalmente dentro de su área de dominio actual.',
+          'Repite métodos y enfoques aunque los resultados no sean óptimos.',
+          'Evita situaciones de incertidumbre o aprendizaje acelerado.',
+          'Le cuesta adaptar su forma de trabajar cuando cambia el contexto.',
+        ],
+        impact: [
+          'Riesgo de obsolescencia técnica o conductual a mediano plazo.',
+          'Requiere estructuras fijas para rendir; no escala bien ante cambios.',
+        ],
+        indicators: [
+          'Usa las mismas herramientas y métodos por largo tiempo sin actualizarlos.',
+          'Reacciona con resistencia ante nuevas metodologías o tecnologías.',
+        ],
+      },
+      {
+        score: 2, label: 'En Desarrollo', sublabel: 'Aprende con guía estructurada',
+        behaviors: [
+          'Adopta nuevas herramientas cuando recibe entrenamiento explícito.',
+          'Transfiere aprendizajes dentro de su dominio con tiempo moderado.',
+          'Muestra disposición al cambio, pero necesita acompañamiento.',
+          'Aprende de retroalimentación directa, no siempre por iniciativa propia.',
+        ],
+        impact: [
+          'Crecimiento posible pero dependiente de intervención externa.',
+          'Puede quedarse rezagado en contextos de cambio rápido.',
+        ],
+        indicators: [
+          'Completa capacitaciones asignadas con buen aprovechamiento.',
+          'Mejora de manera visible cuando recibe coaching o mentoría activa.',
+        ],
+      },
+      {
+        score: 3, label: 'Funcional', sublabel: 'Aprendiz autónomo',
+        behaviors: [
+          'Aprende de retroalimentación y experiencias sin necesitar guía constante.',
+          'Adapta su enfoque ante cambios moderados de manera efectiva.',
+          'Busca activamente nuevos conocimientos en su campo.',
+          'Transfiere aprendizajes entre contextos similares con fluidez.',
+          'Refleja sobre sus errores y ajusta comportamientos.',
+        ],
+        impact: [
+          'Crece de forma consistente; aporta ideas de mejora basadas en lo aprendido.',
+          'Reduce curva de adaptación ante cambios organizacionales.',
+        ],
+        indicators: [
+          'Toma iniciativa de formación sin que se le indique.',
+          'Puede enseñar a otros lo que aprendió recientemente.',
+          'Muestra mejoras observables trimestre a trimestre.',
+        ],
+      },
+      {
+        score: 4, label: 'Avanzado', sublabel: 'Aprendizaje en complejidad',
+        behaviors: [
+          'Aprende rápido de situaciones ambiguas y sin precedente.',
+          'Desafía sus propios supuestos y los somete a prueba.',
+          'Convierte fracasos en aprendizajes documentados y aplicables.',
+          'Busca mentores, experiencias y retos que lo desafíen deliberadamente.',
+          'Aplica aprendizajes de un dominio a problemas de otro dominio distinto.',
+        ],
+        impact: [
+          'Cataliza aprendizaje en su equipo; comparte frameworks y modelos.',
+          'Alta adaptabilidad ante cambios estratégicos de la organización.',
+        ],
+        indicators: [
+          'Puede describir 2-3 aprendizajes clave del último trimestre y su aplicación.',
+          'Propone experimentos o pilotos para probar ideas nuevas.',
+          'Es referente al que otros acuden para entender algo nuevo.',
+        ],
+      },
+      {
+        score: 5, label: 'Excepcional', sublabel: 'Arquitecto de su propio aprendizaje',
+        behaviors: [
+          'Anticipa qué habilidades necesitará y las desarrolla proactivamente.',
+          'Crea sus propios laboratorios de aprendizaje: proyectos, experimentos, retos autoimpuestos.',
+          'Alta tolerancia a la ambigüedad; funciona con eficacia en territorios completamente nuevos.',
+          'Transforma fracasos organizacionales en innovaciones sistémicas.',
+          'Es fuente de aprendizaje colectivo; eleva la capacidad del equipo entero.',
+        ],
+        impact: [
+          'Acelera la curva de aprendizaje del departamento completo.',
+          'Su capacidad de adaptación es un activo estratégico de la organización.',
+        ],
+        indicators: [
+          'Puede articular con claridad su mapa de desarrollo a 12-24 meses.',
+          'Lidera iniciativas de conocimiento colectivo (wikis, comunidades de práctica, demos).',
+          'Es nombrado para proyectos de alto riesgo y alta novedad por su capacidad de adaptación.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'pensamiento',
+    name: 'Complejidad de Pensamiento',
+    code: 'P2',
+    weight: 0.30,
+    weightLabel: '30%',
+    icon: '🔭',
+    definition: 'Capacidad de procesar información compleja, pensar de manera sistémica y estratégica, identificar patrones no obvios, anticipar consecuencias de segundo y tercer orden, y tomar decisiones efectivas en contextos de alta ambigüedad y múltiples variables.',
+    evalAxis: 'Pensamiento sistémico, anticipación estratégica, resolución de problemas complejos, capacidad de abstracción, conexión causa-efecto a largo plazo.',
+    levels: [
+      {
+        score: 1, label: 'Lineal', sublabel: 'Pensamiento secuencial y concreto',
+        behaviors: [
+          'Procesa información de manera secuencial; dificultad para ver relaciones entre variables.',
+          'Foco casi exclusivo en la tarea inmediata; poca visión de contexto.',
+          'Necesita problemas bien estructurados para resolverlos efectivamente.',
+          'Le cuesta anticipar consecuencias más allá del corto plazo.',
+        ],
+        impact: [
+          'Efectivo en tareas rutinarias y bien definidas; limitado en contextos complejos.',
+          'Requiere supervisión en situaciones de ambigüedad o múltiples variables.',
+        ],
+        indicators: [
+          'Describe problemas en términos concretos y específicos.',
+          'Sigue pasos definidos; le cuesta improvisar ante variaciones.',
+        ],
+      },
+      {
+        score: 2, label: 'Táctico', sublabel: 'Análisis causa–efecto básico',
+        behaviors: [
+          'Conecta algunas variables para entender situaciones.',
+          'Resuelve problemas moderadamente complejos con orientación.',
+          'Analiza causa-efecto de primer orden con razonamiento básico.',
+          'Tiene perspectiva de corto a mediano plazo en su área.',
+        ],
+        impact: [
+          'Aporta en análisis tácticos dentro de su dominio.',
+          'Poca contribución a decisiones que requieren visión sistémica.',
+        ],
+        indicators: [
+          'Puede explicar por qué ocurrió un problema, no siempre cómo prevenirlo.',
+          'Resuelve bien problemas similares a los que ya ha enfrentado.',
+        ],
+      },
+      {
+        score: 3, label: 'Analítico', sublabel: 'Múltiples perspectivas y patrones',
+        behaviors: [
+          'Identifica patrones y relaciones entre datos de distintas fuentes.',
+          'Analiza situaciones desde múltiples ángulos antes de concluir.',
+          'Anticipa consecuencias de primer y segundo orden.',
+          'Resuelve problemas complejos dentro de su dominio con autonomía.',
+          'Distingue síntomas de causas raíz con claridad.',
+        ],
+        impact: [
+          'Sus análisis agregan valor real a decisiones tácticas y algunas estratégicas.',
+          'Reduce errores de diagnóstico en el equipo con su perspectiva.',
+        ],
+        indicators: [
+          'Usa frameworks o modelos para estructurar su análisis.',
+          'Anticipa preguntas que stakeholders harán antes de que las hagan.',
+          'Produce recomendaciones con razonamiento claro y evidencia.',
+        ],
+      },
+      {
+        score: 4, label: 'Sistémico', sublabel: 'Ve el sistema completo',
+        behaviors: [
+          'Ve el sistema completo, no solo las partes; conecta departamentos, procesos y estrategia.',
+          'Anticipa consecuencias de segundo y tercer orden en sus decisiones.',
+          'Conecta la estrategia organizacional con la ejecución operativa.',
+          'Identifica causas raíz con precisión, aun en contextos ambiguos.',
+          'Piensa a 1-3 años; toma decisiones que preservan opciones futuras.',
+        ],
+        impact: [
+          'Toma decisiones de alta calidad en contextos complejos con información incompleta.',
+          'Identifica riesgos y oportunidades que otros en el equipo no ven.',
+        ],
+        indicators: [
+          'Sus propuestas incluyen análisis de impacto en otros sistemas o áreas.',
+          'Es consultado por sus pares y líderes para resolver problemas complejos.',
+          'Construye modelos mentales que ayuda a otros a entender situaciones.',
+        ],
+      },
+      {
+        score: 5, label: 'Estratégico', sublabel: 'Redefine los problemas',
+        behaviors: [
+          'Redefine los problemas antes de resolverlos; cuestiona el encuadre inicial.',
+          'Identifica oportunidades estratégicas donde otros ven obstáculos.',
+          'Piensa en ecosistemas, no en equipos; ve la organización como un todo interdependiente.',
+          'Visión clara a 3-5 años con capacidad de articular la trayectoria hacia ese futuro.',
+          'Influye en la agenda estratégica de la organización con sus ideas y análisis.',
+        ],
+        impact: [
+          'Sus ideas cambian la forma en que el equipo o la organización aborda problemas.',
+          'Eleva el nivel de pensamiento colectivo del departamento.',
+        ],
+        indicators: [
+          'Produce frameworks originales adoptados por el equipo o la organización.',
+          'Es invitado a discusiones estratégicas más allá de su área funcional.',
+          'Puede articular escenarios futuros con lógica y evidencia convincentes.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'impulso',
+    name: 'Impulso y Aspiración',
+    code: 'P3',
+    weight: 0.30,
+    weightLabel: '30%',
+    icon: '🚀',
+    definition: 'Motivación intrínseca para crecer, asumir responsabilidades de mayor alcance y contribuir al éxito colectivo. Incluye resiliencia ante adversidad, proactividad, orientación al impacto y disposición a incomodarse por crecer. Es la energía que sostiene el desarrollo a largo plazo.',
+    evalAxis: 'Motivación intrínseca, resiliencia, proactividad, orientación al impacto, disposición al crecimiento, energía sostenida.',
+    levels: [
+      {
+        score: 1, label: 'Reactivo', sublabel: 'Actúa cuando se le solicita',
+        behaviors: [
+          'Actúa principalmente cuando recibe instrucciones claras.',
+          'Poco interés observable en asumir responsabilidades adicionales.',
+          'Baja resiliencia ante contratiempos; tiende a desanimarse.',
+          'Busca estabilidad y previsibilidad sobre crecimiento y reto.',
+        ],
+        impact: [
+          'Su desarrollo depende casi totalmente de intervención externa.',
+          'Riesgo de estancamiento si no recibe impulso constante del liderazgo.',
+        ],
+        indicators: [
+          'No busca proyectos nuevos ni asume iniciativas por cuenta propia.',
+          'Ante dificultades, necesita apoyo externo para retomar el rumbo.',
+        ],
+      },
+      {
+        score: 2, label: 'Funcional', sublabel: 'Crece cuando hay oportunidad clara',
+        behaviors: [
+          'Cumple con sus responsabilidades de manera consistente.',
+          'Busca crecimiento cuando existe oportunidad definida y de bajo riesgo.',
+          'Resiliencia básica ante dificultades menores.',
+          'Motivado principalmente por reconocimiento externo (bonos, elogios, títulos).',
+        ],
+        impact: [
+          'Crecimiento posible, pero dependiente de oferta de oportunidades.',
+          'No genera su propio momentum de desarrollo.',
+        ],
+        indicators: [
+          'Acepta nuevas responsabilidades cuando se le ofrecen; rara vez las busca.',
+          'Recupera el ritmo tras adversidades, aunque le toma tiempo.',
+        ],
+      },
+      {
+        score: 3, label: 'Proactivo', sublabel: 'Busca activamente crecer',
+        behaviors: [
+          'Busca activamente nuevas responsabilidades y proyectos que lo desafíen.',
+          'Supera obstáculos con determinación visible y actitud positiva.',
+          'Habla de su desarrollo en términos de impacto, no solo de posición o salario.',
+          'Persiste ante dificultades; busca soluciones sin esperar que otros actúen.',
+          'Motivación interna visible en su energía, iniciativa y conversaciones.',
+        ],
+        impact: [
+          'Genera un ambiente de mayor energía y compromiso en el equipo.',
+          'Contribuye más allá de su descripción formal de puesto.',
+        ],
+        indicators: [
+          'Presenta ideas o proyectos propios en reuniones sin que se le pida.',
+          'Tiene un plan de desarrollo personal activo y lo comparte con su líder.',
+          'Supera metas de su puesto de manera recurrente.',
+        ],
+      },
+      {
+        score: 4, label: 'Orientado al Impacto', sublabel: 'Misión y contribución colectiva',
+        behaviors: [
+          'Asume proyectos desafiantes voluntariamente, incluso con alta incertidumbre.',
+          'Alta resiliencia: convierte adversidades en aprendizajes concretos.',
+          'Motivado por el impacto colectivo, no solo por logros individuales.',
+          'Trabaja con sentido de misión; conecta su trabajo con el propósito organizacional.',
+          'Inspira a otros con su energía y compromiso sostenido.',
+        ],
+        impact: [
+          'Eleva el estándar del equipo con su ejemplo y energía.',
+          'Atrae proyectos de mayor complejidad y visibilidad.',
+        ],
+        indicators: [
+          'Es nombrado para proyectos estratégicos por iniciativa de líderes.',
+          'Puede articular con claridad por qué le importa lo que hace.',
+          'Otros en el equipo lo señalan como fuente de motivación.',
+        ],
+      },
+      {
+        score: 5, label: 'Transformador', sublabel: 'Moviliza a otros hacia metas colectivas',
+        behaviors: [
+          'Moviliza a otros hacia metas colectivas ambiciosas con su visión y energía.',
+          'Alta tolerancia a la incertidumbre y al riesgo calculado.',
+          'Visión clara de lo que quiere construir y por qué; la articula con convicción.',
+          'Su compromiso y energía son contagiosos; eleva el nivel motivacional del equipo.',
+          'Construye legado, no solo resultados; piensa en el impacto de largo plazo.',
+        ],
+        impact: [
+          'Su presencia tiene un efecto multiplicador en el desempeño colectivo.',
+          'Es un activo estratégico de retención: otros quieren trabajar con y para esta persona.',
+        ],
+        indicators: [
+          'Genera movimiento organizacional más allá de su rol formal.',
+          'Es considerado un líder informal reconocido en toda la organización.',
+          'Cuando no está, su impacto sigue sintiéndose en los sistemas y equipos que construyó.',
+        ],
+      },
+    ],
+  },
+]
+
+function calcPotentialScore(pScores) {
+  let total = 0, wSum = 0
+  POTENTIAL_DIMS.forEach(d => {
+    if (pScores[d.id]) { total += pScores[d.id] * d.weight; wSum += d.weight }
+  })
+  const fullW = POTENTIAL_DIMS.reduce((a, d) => a + d.weight, 0)
+  return wSum === fullW ? +(total.toFixed(2)) : null
+}
+
 const SCORE_COLORS = { 1: '#ef4444', 2: '#f97316', 3: '#eab308', 4: '#22c55e', 5: '#0d9488' }
 const SCORE_BG    = { 1: '#fef2f2', 2: '#fff7ed', 3: '#fefce8', 4: '#f0fdf4', 5: '#f0fdfa' }
 
@@ -864,6 +1186,10 @@ export default function Rubricas({ data, updateCollaborator, updateHeatmap }) {
   const [notes,  setNotes]          = useState('')
   const [saved,  setSaved]          = useState(false)
   const [targetRole, setTargetRole] = useState('Analista')
+  const [evalMode, setEvalMode]           = useState('desempeno')  // 'desempeno' | 'potencial'
+  const [potentialScores, setPotentialScores] = useState({})
+  const [potentialNotes, setPotentialNotes]   = useState('')
+  const [potentialSaved, setPotentialSaved]   = useState(false)
 
   const collab = data.collaborators.find(c => c.id === selectedId)
 
@@ -874,6 +1200,8 @@ export default function Rubricas({ data, updateCollaborator, updateHeatmap }) {
     setNotes(rs.notes || '')
     setTargetRole(rs.targetRole || 'Analista')
     setSaved(false)
+    setPotentialScores(c?.potentialScores?.scores || {})
+    setPotentialNotes(c?.potentialScores?.notes || '')
   }
 
   const handleSelectCollab = (id) => {
@@ -893,6 +1221,11 @@ export default function Rubricas({ data, updateCollaborator, updateHeatmap }) {
   const meetsAllBaseline = allFilled && baselineMap
     ? DIMS.every(d => (scores[d.id] || 0) >= baselineMap[d.id])
     : null
+
+  const potWeightedAvg   = useMemo(() => calcPotentialScore(potentialScores), [potentialScores])
+  const potFilledCount   = POTENTIAL_DIMS.filter(d => potentialScores[d.id]).length
+  const potAllFilled     = potFilledCount === POTENTIAL_DIMS.length
+  const potProgressPct   = Math.round((potFilledCount / POTENTIAL_DIMS.length) * 100)
 
   const handleSave = () => {
     if (!allFilled || !collab) {
@@ -920,6 +1253,25 @@ export default function Rubricas({ data, updateCollaborator, updateHeatmap }) {
     setTimeout(() => setSaved(false), 3500)
   }
 
+  const handleSavePotential = () => {
+    if (!potAllFilled || !collab) {
+      alert('Completa las 3 dimensiones de potencial antes de guardar.')
+      return
+    }
+    const newNineBoxPot = Math.max(1, Math.min(5, Math.round(potWeightedAvg)))
+    updateCollaborator(collab.id, {
+      nineBox: { ...collab.nineBox, potential: newNineBoxPot },
+      potentialScores: {
+        scores: potentialScores,
+        notes: potentialNotes,
+        weightedAvg: potWeightedAvg,
+        lastEvaluated: new Date().toISOString().split('T')[0],
+      },
+    })
+    setPotentialSaved(true)
+    setTimeout(() => setPotentialSaved(false), 3500)
+  }
+
   return (
     <div style={{ maxWidth: 980, margin: '0 auto', padding: '28px 20px 80px' }}>
 
@@ -931,7 +1283,34 @@ export default function Rubricas({ data, updateCollaborator, updateHeatmap }) {
         <p style={{ margin: 0, fontSize: 15, color: '#64748b' }}>
           Instrumentos de evaluación conductual por dimensión estratégica. Selecciona el nivel que mejor describe el desempeño observable del colaborador. Los resultados actualizan automáticamente el perfil, 9-Box y heatmap.
         </p>
+
+        {/* ── Eval Mode Toggle ──────────────────────────────────────────────── */}
+        <div style={{
+          display: 'flex', gap: 6, marginTop: 16, marginBottom: 0,
+          background: '#f1f5f9', borderRadius: 12, padding: 4, width: 'fit-content',
+        }}>
+          {[
+            { key: 'desempeno', label: '📊 Desempeño', desc: '5 dimensiones · Peso ponderado' },
+            { key: 'potencial', label: '🚀 Potencial',  desc: '3 dimensiones · Trayectoria futura' },
+          ].map(m => (
+            <button
+              key={m.key}
+              onClick={() => setEvalMode(m.key)}
+              style={{
+                padding: '10px 22px', borderRadius: 9, border: 'none', cursor: 'pointer',
+                fontWeight: 700, fontSize: 14, transition: 'all 0.15s',
+                background: evalMode === m.key ? 'white' : 'transparent',
+                color: evalMode === m.key ? '#0f172a' : '#64748b',
+                boxShadow: evalMode === m.key ? '0 1px 4px rgba(0,0,0,0.1)' : 'none',
+              }}
+            >{m.label}</button>
+          ))}
+        </div>
       </div>
+
+      {/* ═══════════════════════════════ PERFORMANCE MODE ═══════════════════════════ */}
+      {evalMode === 'desempeno' && (
+      <>
 
       {/* ── Collaborator + Target Role ─────────────────────────────────── */}
       <div style={{
@@ -1201,6 +1580,206 @@ export default function Rubricas({ data, updateCollaborator, updateHeatmap }) {
               )}
             </div>
           </div>
+        </>
+      )}
+
+      </>
+      )} {/* end evalMode === 'desempeno' */}
+
+      {/* ═══════════════════════════════ POTENTIAL MODE ═══════════════════════════ */}
+      {evalMode === 'potencial' && (
+        <>
+          {/* Description */}
+          <div style={{
+            background: 'linear-gradient(135deg, #7c3aed11, #0d948811)',
+            border: '1px solid #7c3aed33',
+            borderRadius: 12, padding: '14px 18px', marginBottom: 18,
+          }}>
+            <div style={{ fontSize: 13, color: '#4c1d95', fontWeight: 600, marginBottom: 4 }}>
+              ¿Qué mide esta sección?
+            </div>
+            <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.7 }}>
+              El potencial evalúa la <strong>trayectoria futura</strong> del colaborador — no lo que hace hoy,
+              sino su capacidad de crecer hacia roles de mayor complejidad. Se basa en tres dimensiones
+              predichas por la investigación como los mejores indicadores de potencial de liderazgo:
+              Agilidad de Aprendizaje, Complejidad de Pensamiento e Impulso y Aspiración.
+              El resultado actualiza el eje de <strong>Potencial del 9-Box</strong>.
+            </div>
+          </div>
+
+          {/* Collaborator selector (reuse same UI) */}
+          <div style={{
+            background: 'white', borderRadius: 14, padding: '18px 22px',
+            marginBottom: 18, border: '1px solid #e2e8f0',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+          }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 10 }}>
+              Colaborador
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {data.collaborators.map(c => (
+                <button key={c.id} onClick={() => handleSelectCollab(c.id)} style={{
+                  padding: '8px 18px', borderRadius: 24, border: '2px solid',
+                  borderColor: selectedId === c.id ? '#7c3aed' : '#e2e8f0',
+                  background: selectedId === c.id ? '#7c3aed' : 'white',
+                  color: selectedId === c.id ? 'white' : '#475569',
+                  fontWeight: 600, fontSize: 14, cursor: 'pointer', transition: 'all 0.15s',
+                }}>
+                  {c.code}
+                  {c.potentialScores && <span style={{ marginLeft: 6, opacity: 0.8, fontSize: 12 }}>✓</span>}
+                </button>
+              ))}
+            </div>
+            {collab && (
+              <div style={{ marginTop: 8, fontSize: 13, color: '#64748b' }}>
+                <strong style={{ color: '#1e293b' }}>{collab.currentPosition}</strong>
+                {collab.potentialScores?.lastEvaluated && (
+                  <span style={{ marginLeft: 10, color: '#94a3b8' }}>
+                    Última eval: {collab.potentialScores.lastEvaluated}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Progress bar */}
+          {collab && (
+            <div style={{
+              background: 'white', borderRadius: 12, padding: '14px 20px',
+              marginBottom: 20, border: '1px solid #e2e8f0',
+              display: 'flex', alignItems: 'center', gap: 16,
+            }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: '#475569' }}>
+                    Progreso evaluación — {collab.code}
+                  </span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed' }}>
+                    {potFilledCount}/{POTENTIAL_DIMS.length} dimensiones
+                  </span>
+                </div>
+                <div style={{ height: 8, borderRadius: 4, background: '#f1f5f9', overflow: 'hidden' }}>
+                  <div style={{
+                    height: '100%', borderRadius: 4,
+                    background: potAllFilled ? '#7c3aed' : '#a78bfa',
+                    width: `${potProgressPct}%`,
+                    transition: 'width 0.4s ease',
+                  }} />
+                </div>
+              </div>
+              {potWeightedAvg && (
+                <div style={{ textAlign: 'center', minWidth: 80 }}>
+                  <div style={{ fontSize: 26, fontWeight: 800, color: '#7c3aed' }}>
+                    {potWeightedAvg}
+                  </div>
+                  <div style={{ fontSize: 11, color: '#94a3b8', fontWeight: 600 }}>Score Potencial</div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Potential dimension sections */}
+          {collab && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {POTENTIAL_DIMS.map(dim => (
+                <DimSection
+                  key={dim.id}
+                  dim={dim}
+                  score={potentialScores[dim.id]}
+                  onScore={(id, v) => setPotentialScores(prev => ({ ...prev, [id]: v }))}
+                  baseline={null}
+                />
+              ))}
+
+              {/* Notes */}
+              <div style={{ background: 'white', borderRadius: 12, padding: '16px 20px', border: '1px solid #e2e8f0' }}>
+                <label style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: 8 }}>
+                  Observaciones de potencial
+                </label>
+                <textarea
+                  value={potentialNotes}
+                  onChange={e => setPotentialNotes(e.target.value)}
+                  placeholder="Anota evidencias observables de aprendizaje, pensamiento estratégico o impulso..."
+                  rows={3}
+                  style={{
+                    width: '100%', boxSizing: 'border-box', borderRadius: 8,
+                    border: '1.5px solid #e2e8f0', padding: '10px 14px',
+                    fontSize: 13, fontFamily: 'inherit', resize: 'vertical', outline: 'none',
+                  }}
+                />
+              </div>
+
+              {/* Summary + Save */}
+              <div style={{
+                background: 'white', borderRadius: 14, padding: '20px 24px',
+                border: '1.5px solid #7c3aed33',
+                boxShadow: '0 2px 8px rgba(124,58,237,0.08)',
+              }}>
+                <div style={{ fontSize: 15, fontWeight: 800, color: '#0f172a', marginBottom: 16 }}>
+                  Resumen de Potencial — {collab?.code}
+                </div>
+
+                <div style={{ display: 'flex', gap: 20, marginBottom: 20, flexWrap: 'wrap' }}>
+                  {POTENTIAL_DIMS.map(d => (
+                    <MiniRing
+                      key={d.id}
+                      value={potentialScores[d.id] || null}
+                      max={5}
+                      color="#7c3aed"
+                      label={d.name.split(' ').slice(0,2).join(' ')}
+                    />
+                  ))}
+                </div>
+
+                {potWeightedAvg && (
+                  <div style={{
+                    background: '#f5f3ff', borderRadius: 10, padding: '12px 16px',
+                    marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  }}>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: '#7c3aed' }}>Score Ponderado de Potencial</div>
+                      <div style={{ fontSize: 12, color: '#9ca3af' }}>Agilidad ×0.40 + Pensamiento ×0.30 + Impulso ×0.30</div>
+                    </div>
+                    <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>
+                      {potWeightedAvg} <span style={{ fontSize: 14, fontWeight: 600, color: '#a78bfa' }}>/ 5</span>
+                    </div>
+                  </div>
+                )}
+
+                {potWeightedAvg && (
+                  <div style={{
+                    background: '#f8fafc', borderRadius: 8, padding: '10px 14px',
+                    marginBottom: 16, fontSize: 13, color: '#475569',
+                  }}>
+                    <strong>Posición en 9-Box (eje Potencial):</strong>{' '}
+                    {potWeightedAvg >= 4.5 ? '5 — Alto potencial excepcional'
+                      : potWeightedAvg >= 3.5 ? '4 — Alto potencial'
+                      : potWeightedAvg >= 2.5 ? '3 — Potencial moderado–alto'
+                      : potWeightedAvg >= 1.5 ? '2 — Potencial en desarrollo'
+                      : '1 — Potencial limitado en este momento'}
+                  </div>
+                )}
+
+                <button
+                  onClick={handleSavePotential}
+                  disabled={!potAllFilled || !collab}
+                  style={{
+                    width: '100%', padding: '14px 0', borderRadius: 10, border: 'none',
+                    background: potAllFilled && collab ? '#7c3aed' : '#e2e8f0',
+                    color: potAllFilled && collab ? 'white' : '#94a3b8',
+                    fontWeight: 800, fontSize: 15, cursor: potAllFilled && collab ? 'pointer' : 'not-allowed',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  {potentialSaved
+                    ? '✓ Potencial guardado y 9-Box actualizado'
+                    : potAllFilled
+                      ? '💾 Guardar evaluación de potencial'
+                      : `Completa ${POTENTIAL_DIMS.length - potFilledCount} dimensión(es) restantes`}
+                </button>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
