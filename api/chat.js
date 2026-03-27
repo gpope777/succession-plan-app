@@ -1,5 +1,5 @@
-// Vercel Serverless Function — proxy to Gemini API
-// API key stays 100% server-side, never exposed to the browser
+// Vercel Serverless Function – Gemini proxy
+// Node.js runtime (CommonJS-compatible via Vercel's wrapper)
 
 const SYSTEM_PROMPT = `Eres un asistente experto en valores organizacionales, liderazgo y comportamiento humano en el trabajo. Formas parte de una plataforma de plan de sucesión empresarial.
 
@@ -18,7 +18,6 @@ Reglas:
 - Usa formato claro: párrafos breves, bullets cuando ayude a la claridad`
 
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
@@ -28,69 +27,70 @@ export default async function handler(req, res) {
 
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) {
-    return res.status(500).json({ error: 'API key not configured. Add GEMINI_API_KEY to Vercel environment variables.' })
+    return res.status(500).json({
+      error: 'API key not configured',
+      detail: 'Add GEMINI_API_KEY to Vercel Environment Variables and redeploy.'
+    })
   }
 
-  const { message, history = [] } = req.body
+  let body = req.body
+  // Vercel usually parses JSON automatically; guard in case it doesn't
+  if (typeof body === 'string') {
+    try { body = JSON.parse(body) } catch { return res.status(400).json({ error: 'Invalid JSON' }) }
+  }
+
+  const { message, history = [] } = body || {}
   if (!message?.trim()) return res.status(400).json({ error: 'Message is required' })
 
-  // Build conversation history for Gemini (alternating user/model)
+  // Build Gemini contents array from history + current message
   const contents = []
-
-  // Add prior conversation turns
   for (const turn of history) {
     if (turn.role === 'user' || turn.role === 'model') {
       contents.push({ role: turn.role, parts: [{ text: turn.text }] })
     }
   }
+  contents.push({ role: 'user', parts: [{ text: message.trim() }] })
 
-  // Add current user message
-  contents.push({ role: 'user', parts: [{ text: message }] })
+  const geminiUrl =
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`
 
+  let geminiRes
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          system_instruction: {
-            parts: [{ text: SYSTEM_PROMPT }]
-          },
-          contents,
-          generationConfig: {
-            temperature: 0.65,
-            maxOutputTokens: 900,
-            topP: 0.9,
-          },
-          safetySettings: [
-            { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_NONE' },
-            { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_NONE' },
-            { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
-            { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
-          ],
-        }),
-      }
-    )
-
-    if (!response.ok) {
-      const err = await response.text()
-      console.error('Gemini API error:', err)
-      return res.status(502).json({ error: 'Error communicating with AI service', detail: err })
-    }
-
-    const data = await response.json()
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text
-
-    if (!text) {
-      console.error('Unexpected Gemini response shape:', JSON.stringify(data))
-      return res.status(502).json({ error: 'Unexpected response from AI service' })
-    }
-
-    return res.status(200).json({ text })
-
-  } catch (err) {
-    console.error('Handler error:', err)
-    return res.status(500).json({ error: 'Internal server error', detail: err.message })
+    geminiRes = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents,
+        generationConfig: {
+          temperature: 0.65,
+          maxOutputTokens: 900,
+          topP: 0.9,
+        },
+      }),
+    })
+  } catch (networkErr) {
+    console.error('Gemini fetch failed:', networkErr)
+    return res.status(502).json({ error: 'Could not reach Gemini API', detail: networkErr.message })
   }
+
+  let data
+  try {
+    data = await geminiRes.json()
+  } catch {
+    return res.status(502).json({ error: 'Gemini returned non-JSON response', status: geminiRes.status })
+  }
+
+  if (!geminiRes.ok) {
+    console.error('Gemini API error:', data)
+    return res.status(502).json({ error: 'Gemini API error', detail: data?.error?.message || geminiRes.status })
+  }
+
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text
+  if (!text) {
+    console.error('Unexpected Gemini shape:', JSON.stringify(data))
+    return res.status(502).json({ error: 'Empty response from Gemini', raw: data })
+  }
+
+  return res.status(200).json({ text })
 }

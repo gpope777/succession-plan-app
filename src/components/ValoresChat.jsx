@@ -148,11 +148,17 @@ export default function ValoresChat() {
         }),
       })
 
-      const data = await res.json()
+      // Try to parse JSON regardless of status code so we get the real error
+      let data
+      try { data = await res.json() } catch { data = null }
 
-      if (!res.ok || data.error) {
-        throw new Error(data.error || `HTTP ${res.status}`)
+      if (!res.ok || data?.error) {
+        const msg = data?.error || `HTTP ${res.status}`
+        const detail = data?.detail ? ` (${data.detail})` : ''
+        throw new Error(msg + detail)
       }
+
+      if (!data?.text) throw new Error('empty response')
 
       // Add to conversation history for future turns
       historyRef.current = [
@@ -168,14 +174,21 @@ export default function ValoresChat() {
       }])
 
     } catch (err) {
-      console.error('Chat error:', err)
+      console.error('Chat error:', err.message)
+      const lower = err.message.toLowerCase()
+      let userMsg
+      if (lower.includes('api key') || lower.includes('not configured')) {
+        userMsg = '⚙️ El asistente aún no está configurado. Agrega GEMINI_API_KEY en Vercel → Settings → Environment Variables y haz Redeploy.'
+      } else if (lower.includes('fetch') || lower.includes('networkerror') || lower.includes('failed to fetch')) {
+        userMsg = '⚠️ No se pudo alcanzar el servidor. Verifica que el sitio esté desplegado en Vercel (no en localhost).'
+      } else {
+        userMsg = `⚠️ Error: ${err.message}`
+      }
       setMessages(m => [...m, {
         type: 'bot',
         id: Date.now() + 1,
         error: true,
-        text: err.message.includes('API key')
-          ? '⚙️ El asistente aún no está configurado. Un administrador debe agregar el GEMINI_API_KEY en Vercel.'
-          : '⚠️ No pude conectarme al asistente ahora mismo. Verifica tu conexión e intenta de nuevo.',
+        text: userMsg,
       }])
     } finally {
       setTyping(false)
