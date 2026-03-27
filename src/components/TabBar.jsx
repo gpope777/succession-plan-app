@@ -28,7 +28,11 @@ const GROUPS = [
     id: 'cultura',
     label: 'Cultura & Valores',
     icon: '🧭',
-    tabs: [{ id: 'valores', label: 'Guía de Valores', icon: 'V' }],
+    tabs: [
+      { id: 'valores',   label: 'Guía de Valores',       icon: 'V'  },
+      { id: 'clima',     label: 'Clima Cultural',         icon: '🌡️' },
+      { id: 'liderazgo', label: 'Eval. de Liderazgo',     icon: '🧭' },
+    ],
   },
   {
     id: 'feedback',

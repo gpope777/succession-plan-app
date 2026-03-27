@@ -11,6 +11,8 @@ import Rubricas from './pages/Rubricas'
 import FeedbackBox from './pages/FeedbackBox'
 import BancaTalento from './pages/BancaTalento'
 import Calidad from './pages/Calidad'
+import ClimaLaboral from './pages/ClimaLaboral'
+import EvalLiderazgo from './pages/EvalLiderazgo'
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home')
@@ -28,6 +30,8 @@ export default function App() {
       case 'talent':     return <TalentCard {...pageProps} />
       case 'banca':   return <BancaTalento {...pageProps} />
       case 'calidad':   return <Calidad      {...pageProps} />
+      case 'clima':     return <ClimaLaboral    {...pageProps} />
+      case 'liderazgo': return <EvalLiderazgo   {...pageProps} />
       case 'feedback':  return <FeedbackBox  {...pageProps} />
       default:        return <Home    {...pageProps} />
     }
