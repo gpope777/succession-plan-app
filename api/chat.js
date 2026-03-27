@@ -1,5 +1,6 @@
-// Vercel Serverless Function – Gemini proxy
-// Node.js runtime (CommonJS-compatible via Vercel's wrapper)
+// Vercel Serverless Function – Groq AI proxy
+// Groq is free (no credit card), ~1s responses, 14,400 requests/day
+// Model: llama-3.3-70b-versatile (state-of-the-art open source)
 
 const SYSTEM_PROMPT = `Eres un asistente experto en valores organizacionales, liderazgo y comportamiento humano en el trabajo. Formas parte de una plataforma de plan de sucesión empresarial.
 
@@ -25,16 +26,15 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  const apiKey = process.env.GEMINI_API_KEY
+  const apiKey = process.env.GROQ_API_KEY
   if (!apiKey) {
     return res.status(500).json({
       error: 'API key not configured',
-      detail: 'Add GEMINI_API_KEY to Vercel Environment Variables and redeploy.'
+      detail: 'Add GROQ_API_KEY to Vercel Environment Variables and redeploy.'
     })
   }
 
   let body = req.body
-  // Vercel usually parses JSON automatically; guard in case it doesn't
   if (typeof body === 'string') {
     try { body = JSON.parse(body) } catch { return res.status(400).json({ error: 'Invalid JSON' }) }
   }
@@ -42,55 +42,52 @@ export default async function handler(req, res) {
   const { message, history = [] } = body || {}
   if (!message?.trim()) return res.status(400).json({ error: 'Message is required' })
 
-  // Build Gemini contents array from history + current message
-  const contents = []
+  // Build OpenAI-compatible messages array (Groq uses the same format)
+  const messages = [{ role: 'system', content: SYSTEM_PROMPT }]
   for (const turn of history) {
-    if (turn.role === 'user' || turn.role === 'model') {
-      contents.push({ role: turn.role, parts: [{ text: turn.text }] })
+    if (turn.role === 'user' || turn.role === 'assistant') {
+      messages.push({ role: turn.role, content: turn.text })
     }
   }
-  contents.push({ role: 'user', parts: [{ text: message.trim() }] })
+  messages.push({ role: 'user', content: message.trim() })
 
-  // gemini-2.0-flash-lite: free tier, fast, generous quota
-  const geminiUrl =
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`
-
-  let geminiRes
+  let groqRes
   try {
-    geminiRes = await fetch(geminiUrl, {
+    groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents,
-        generationConfig: {
-          temperature: 0.65,
-          maxOutputTokens: 900,
-          topP: 0.9,
-        },
+        model: 'llama-3.3-70b-versatile',
+        messages,
+        temperature: 0.65,
+        max_tokens: 900,
+        top_p: 0.9,
       }),
     })
   } catch (networkErr) {
-    console.error('Gemini fetch failed:', networkErr)
-    return res.status(502).json({ error: 'Could not reach Gemini API', detail: networkErr.message })
+    console.error('Groq fetch failed:', networkErr)
+    return res.status(502).json({ error: 'Could not reach Groq API', detail: networkErr.message })
   }
 
   let data
   try {
-    data = await geminiRes.json()
+    data = await groqRes.json()
   } catch {
-    return res.status(502).json({ error: 'Gemini returned non-JSON response', status: geminiRes.status })
+    return res.status(502).json({ error: 'Groq returned non-JSON response', status: groqRes.status })
   }
 
-  if (!geminiRes.ok) {
-    console.error('Gemini API error:', data)
-    return res.status(502).json({ error: 'Gemini API error', detail: data?.error?.message || geminiRes.status })
+  if (!groqRes.ok) {
+    console.error('Groq API error:', data)
+    return res.status(502).json({ error: 'Groq API error', detail: data?.error?.message || groqRes.status })
   }
 
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text
+  const text = data.choices?.[0]?.message?.content
   if (!text) {
-    console.error('Unexpected Gemini shape:', JSON.stringify(data))
-    return res.status(502).json({ error: 'Empty response from Gemini', raw: data })
+    console.error('Unexpected Groq response shape:', JSON.stringify(data))
+    return res.status(502).json({ error: 'Empty response from Groq' })
   }
 
   return res.status(200).json({ text })

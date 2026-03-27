@@ -178,7 +178,7 @@ export default function ValoresChat() {
       const lower = err.message.toLowerCase()
       let userMsg
       if (lower.includes('api key') || lower.includes('not configured')) {
-        userMsg = '⚙️ El asistente aún no está configurado. Agrega GEMINI_API_KEY en Vercel → Settings → Environment Variables y haz Redeploy.'
+        userMsg = '⚙️ El asistente aún no está configurado. Agrega GROQ_API_KEY en Vercel → Settings → Environment Variables y haz Redeploy.'
       } else if (lower.includes('fetch') || lower.includes('networkerror') || lower.includes('failed to fetch')) {
         userMsg = '⚠️ No se pudo alcanzar el servidor. Verifica que el sitio esté desplegado en Vercel (no en localhost).'
       } else {
