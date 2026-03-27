@@ -23,50 +23,57 @@ const STOP_WORDS = new Set([
 function extractKeywords(text) {
   return normalize(text)
     .split(' ')
-    .filter(w => w.length > 2 && !STOP_WORDS.has(w))
+    .filter(w => w.length >= 4 && !STOP_WORDS.has(w))
 }
 
-function scoreEntry(entry, userKeywords) {
+function scoreEntry(entry, userKeywords, normInput) {
   let score = 0
-  const normTriggers = entry.triggers.map(t => normalize(t))
-  const normTitle    = normalize(entry.title)
-  const normResponse = normalize(entry.response.slice(0, 300))
 
-  for (const kw of userKeywords) {
-    // Exact trigger match (highest value)
-    for (const trigger of normTriggers) {
-      if (trigger === kw) score += 10
-      else if (trigger.includes(kw) || kw.includes(trigger)) score += 5
-      else if (trigger.split(' ').some(w => w === kw)) score += 3
+  // 1. Full-phrase match in the raw normalized input — highest confidence signal
+  //    e.g. user types "seguridad psicologica" → finds trigger "seguridad psicologica"
+  for (const trigger of entry.triggers) {
+    const normTrigger = normalize(trigger)
+    if (normInput.includes(normTrigger)) {
+      // Weight by phrase length so longer matches score higher
+      score += normTrigger.split(' ').length * 14
     }
-    // Title match
-    if (normTitle.includes(kw)) score += 4
-    // Response preview match
-    if (normResponse.includes(kw)) score += 1
   }
 
-  // Bonus: full phrase match
-  const inputFull = userKeywords.join(' ')
-  for (const trigger of normTriggers) {
-    if (trigger.includes(inputFull) && inputFull.length > 4) score += 15
+  // 2. Word-level exact match — no substring tricks to avoid false positives
+  //    Build a set of individual words from all triggers (min length 4 to skip noise)
+  const triggerWords = new Set(
+    entry.triggers
+      .flatMap(t => normalize(t).split(' '))
+      .filter(w => w.length >= 4)
+  )
+  for (const kw of userKeywords) {
+    if (triggerWords.has(kw)) score += 8
+  }
+
+  // 3. Title word match — secondary signal
+  const titleWords = normalize(entry.title).split(' ').filter(w => w.length >= 4)
+  for (const kw of userKeywords) {
+    if (titleWords.includes(kw)) score += 4
   }
 
   return score
 }
 
 function findMatch(userInput) {
-  const keywords = extractKeywords(userInput)
+  const normInput = normalize(userInput)
+  const keywords  = extractKeywords(userInput)
   if (keywords.length === 0) return null
 
   let best = null
   let bestScore = 0
 
   for (const entry of KB) {
-    const s = scoreEntry(entry, keywords)
+    const s = scoreEntry(entry, keywords, normInput)
     if (s > bestScore) { bestScore = s; best = entry }
   }
 
-  return bestScore >= 3 ? best : null
+  // Require a meaningful score — prevents weak single-word coincidences from firing
+  return bestScore >= 12 ? best : null
 }
 
 function buildResponse(entry) {
