@@ -1,8 +1,7 @@
 const TABS = [
   { id: 'home',       label: 'Resumen del Plan',      icon: 'H'  },
-  { id: 'valores',    label: 'Guía de Valores',       icon: 'V'  },
-  { id: 'marco',      label: 'Marco de Competencias', icon: 'MC' },
-  { id: 'hpo',        label: 'HPO & Data-Driven',     icon: 'HP' },
+  { id: 'valores',     label: 'Guía de Valores',        icon: 'V'  },
+  { id: 'estandares', label: 'Estándares de Talento',  icon: 'ET' },
   { id: 'rubricas',   label: 'Rúbricas',              icon: '📐' },
   { id: 'talentcard', label: 'Talent Card',            icon: 'TC' },
   { id: 'talent',     label: 'Perfiles & IDP',         icon: 'PP' },

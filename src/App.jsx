@@ -5,8 +5,7 @@ import TabBar from './components/TabBar'
 import StatusBar from './components/StatusBar'
 import Home from './pages/Home'
 import Valores from './pages/Valores'
-import Marco from './pages/Marco'
-import HPO from './pages/HPO'
+import EstandaresTalento from './pages/EstandaresTalento'
 import TalentCard from './pages/TalentCard'
 import TalentCardForm from './pages/TalentCardForm'
 import Rubricas from './pages/Rubricas'
@@ -24,9 +23,8 @@ export default function App() {
   const renderPage = () => {
     switch (activeTab) {
       case 'home':    return <Home    {...pageProps} />
-      case 'valores': return <Valores {...pageProps} />
-      case 'marco':   return <Marco   {...pageProps} />
-      case 'hpo':     return <HPO     {...pageProps} />
+      case 'valores':    return <Valores          {...pageProps} />
+      case 'estandares': return <EstandaresTalento {...pageProps} />
       case 'rubricas':   return <Rubricas    {...pageProps} />
       case 'talentcard': return <TalentCardForm {...pageProps} />
       case 'talent':     return <TalentCard {...pageProps} />
