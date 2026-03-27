@@ -117,12 +117,12 @@ export default function Home({ data, onTabChange }) {
         <div className="sec-lbl">Documentos del plan — haz clic para abrir</div>
         <div className="grid-6" style={{ marginBottom: 20 }}>
           {[
-            { id: 'valores', icon: 'V',  color: 'var(--teal)',   title: 'Guía de Valores',        desc: 'Conductas observables e indicadores para evaluar alineación cultural.' },
-            { id: 'marco',   icon: 'MC', color: 'var(--navy)',   title: 'Marco de Competencias',  desc: 'Definiciones PNS, modelo de competencias y preguntas STAR.' },
-            { id: 'hpo',     icon: 'HP', color: '#7C3AED',       title: 'HPO & Data-Driven',      desc: 'Modelo HPO de De Waal, pilares data-driven e IA como acelerador.' },
-            { id: 'talent',  icon: 'TC', color: 'var(--purple)', title: 'Talent Card',            desc: 'Evaluación individual con checklist, 9-Box y plan de sucesión.' },
-            { id: 'banca',   icon: 'BT', color: 'var(--amber)',  title: 'Banca de Talento',       desc: 'Perfiles, brechas y planes de desarrollo de los colaboradores.' },
-            { id: 'calidad', icon: 'CA', color: 'var(--blue)',   title: 'Análisis de Calidad',    desc: 'Vista ejecutiva del pipeline: heatmap, métricas y recomendaciones.' },
+            { id: 'valores',  icon: 'V',  color: 'var(--teal)',   title: 'Guía de Valores',        desc: 'Conductas observables e indicadores para evaluar alineación cultural.' },
+            { id: 'rubricas', icon: '📐', color: '#0d9488',       title: 'Rúbricas',               desc: 'Evaluación conductual por dimensión de desempeño y potencial. Alimenta el 9-Box.' },
+            { id: 'talent',   icon: 'TC', color: 'var(--purple)', title: 'Talent Card',            desc: 'Evaluación individual con checklist, 9-Box y plan de sucesión.' },
+            { id: 'banca',    icon: 'BT', color: 'var(--amber)',  title: 'Banca de Talento',       desc: 'Perfiles, brechas y planes de desarrollo de los colaboradores.' },
+            { id: 'calidad',  icon: 'CA', color: 'var(--blue)',   title: 'Análisis de Calidad',    desc: 'Vista ejecutiva del pipeline: heatmap, métricas y recomendaciones.' },
+            { id: 'feedback', icon: '📬', color: 'var(--coral)',  title: 'Buzón de Feedback',      desc: 'Canal de comunicación anónimo o identificado para el equipo de liderazgo.' },
           ].map(d => (
             <div
               key={d.id}

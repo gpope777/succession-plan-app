@@ -26,7 +26,7 @@ function NineBox({ perf, pot }) {
           className={`ninebox-cell ${isOccupied ? 'occupied' : ''}`}
           style={{ background: colors[qi] }}
         >
-          {isOccupied ? '●' : ''}
+          {isOccupied ? '⭐' : ''}
         </div>
       )
     }
@@ -366,7 +366,7 @@ export default function TalentCard({ data, adminMode, updateCollaborator }) {
 
           {/* 9-Box sidebar */}
           <div style={{ paddingTop: 2 }}>
-            <div className="card card-p" style={{ width: 260 }}>
+            <div className="card card-p" style={{ width: 320 }}>
               <NineBox perf={collab.nineBox.performance} pot={collab.nineBox.potential} />
               <div style={{ marginTop: 14, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                 <div style={{ background: 'var(--gray-1)', borderRadius: 8, padding: '10px', textAlign: 'center' }}>
