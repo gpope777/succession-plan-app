@@ -13,6 +13,7 @@ import BancaTalento from './pages/BancaTalento'
 import Calidad from './pages/Calidad'
 import ClimaLaboral from './pages/ClimaLaboral'
 import EvalLiderazgo from './pages/EvalLiderazgo'
+import BaseDatos from './pages/BaseDatos'
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home')
@@ -32,6 +33,7 @@ export default function App() {
       case 'calidad':   return <Calidad      {...pageProps} />
       case 'clima':     return <ClimaLaboral    {...pageProps} />
       case 'liderazgo': return <EvalLiderazgo   {...pageProps} />
+      case 'basedatos': return <BaseDatos     {...pageProps} />
       case 'feedback':  return <FeedbackBox  {...pageProps} />
       default:        return <Home    {...pageProps} />
     }

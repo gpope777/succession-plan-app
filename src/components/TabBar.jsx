@@ -20,8 +20,9 @@ const GROUPS = [
     label: 'Diagnóstico',
     icon: '🔍',
     tabs: [
-      { id: 'banca',   label: 'Banca de Talento',    icon: 'BT' },
-      { id: 'calidad', label: 'Análisis de Calidad', icon: 'CA' },
+      { id: 'banca',     label: 'Banca de Talento',    icon: 'BT' },
+      { id: 'calidad',   label: 'Análisis de Calidad', icon: 'CA' },
+      { id: 'basedatos', label: 'Base de Datos',        icon: '🗄️' },
     ],
   },
   {

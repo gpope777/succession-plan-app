@@ -155,6 +155,91 @@ export async function exportFullPDF(data) {
   pdf.save(`plan-sucesion-pns-completo-${new Date().toISOString().slice(0, 10)}.pdf`)
 }
 
+// ─── Evaluaciones CSV Export ─────────────────────────────────────────────────
+
+const PERF_DIMS = [
+  { id: 'liderazgo',    code: 'A', weightLabel: '30%' },
+  { id: 'gestion',      code: 'B', weightLabel: '20%' },
+  { id: 'comunicacion', code: 'C', weightLabel: '15%' },
+  { id: 'tecnico',      code: 'D', weightLabel: '20%' },
+  { id: 'cumplimiento', code: 'E', weightLabel: '15%' },
+]
+
+const POT_DIMS = [
+  { id: 'aprendizaje', code: 'P1', weightLabel: '40%' },
+  { id: 'pensamiento', code: 'P2', weightLabel: '30%' },
+  { id: 'impulso',     code: 'P3', weightLabel: '30%' },
+]
+
+export function exportEvaluacionesCSV(data) {
+  const { collaborators, heatmap } = data
+
+  const heatmapLabels = heatmap.map(r => r.dimension)
+
+  const headers = [
+    'Código', 'Posición Actual', 'Departamento', 'Prioridad',
+    'Estado Readiness', 'Readiness %', 'Timeline', 'Puesto Objetivo',
+    ...PERF_DIMS.map(d => `${d.code}-${d.id} (${d.weightLabel})`),
+    'Promedio Desempeño', 'Rol Objetivo Evaluado', 'Período Evaluación', 'Fecha Eval Desempeño',
+    ...POT_DIMS.map(d => `${d.code}-${d.id} (${d.weightLabel})`),
+    'Promedio Potencial', 'Fecha Eval Potencial',
+    '9-Box Performance', '9-Box Potencial',
+    ...heatmapLabels.map(l => `HM: ${l}`),
+    'IDP: Total Acciones', 'IDP: Completadas', 'IDP: % Progreso',
+  ]
+
+  const esc = (v) => {
+    const s = String(v ?? '')
+    return s.includes(',') || s.includes('"') || s.includes('\n')
+      ? `"${s.replace(/"/g, '""')}"`
+      : s
+  }
+
+  const rows = collaborators.map(c => {
+    const rs = c.rubricScores
+    const ps = c.potentialScores
+    const allActions = c.idp?.flatMap(p => p.actions) || []
+    const done = allActions.filter(a => a.status === 'done').length
+    const idpPct = allActions.length > 0 ? Math.round((done / allActions.length) * 100) : 0
+    const hmValues = heatmap.map(row => row[c.id] ?? '')
+
+    return [
+      c.code, c.currentPosition, c.department, c.priority,
+      c.readinessStatus, c.readinessPercentage, c.timelineMonths, c.targetPosition,
+      ...PERF_DIMS.map(d => rs?.scores?.[d.id] ?? ''),
+      rs?.weightedAvg ?? '', rs?.targetRole ?? '', rs?.period ?? '', rs?.lastEvaluated ?? '',
+      ...POT_DIMS.map(d => ps?.scores?.[d.id] ?? ''),
+      ps?.weightedAvg ?? '', ps?.lastEvaluated ?? '',
+      c.nineBox?.performance ?? '', c.nineBox?.potential ?? '',
+      ...hmValues,
+      allActions.length, done, idpPct,
+    ]
+  })
+
+  const csv = [headers, ...rows].map(row => row.map(esc).join(',')).join('\n')
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
+  saveAs(blob, `evaluaciones-pns-${new Date().toISOString().slice(0, 10)}.csv`)
+}
+
+// ─── Evaluaciones JSON Export (importable) ───────────────────────────────────
+
+export function exportEvaluacionesJSON(data) {
+  const payload = {
+    _tipo: 'evaluaciones-pns-pr',
+    _fecha: new Date().toISOString().slice(0, 10),
+    _version: 1,
+    evaluaciones: data.collaborators.map(c => ({
+      id: c.id,
+      code: c.code,
+      rubricScores: c.rubricScores ?? null,
+      potentialScores: c.potentialScores ?? null,
+    })),
+    heatmap: data.heatmap,
+  }
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+  saveAs(blob, `evaluaciones-pns-${new Date().toISOString().slice(0, 10)}.json`)
+}
+
 // ─── Word (DOCX) Export ──────────────────────────────────────────────────────
 
 export async function exportDocx(data, collaboratorId = null) {
