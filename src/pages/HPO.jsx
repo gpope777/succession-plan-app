@@ -12,7 +12,7 @@ export default function HPO() {
     { label: 'Calidad e integridad del dato', desc: 'Los datos son precisos, completos y gobernados. La confiabilidad analítica es responsabilidad del equipo.' },
     { label: 'Capacidad analítica avanzada', desc: 'El departamento evoluciona de reporting reactivo a analítica predictiva e IA generativa.' },
     { label: 'Cultura de datos', desc: 'Las decisiones se toman con evidencia, no con intuición. Se documenta el "por qué" detrás de cada análisis.' },
-    { label: 'Liderazgo data-literate', desc: 'Los líderes de PNS-PR interpretan dashboards, hacen preguntas basadas en datos y exigen evidencia cuantitativa.' },
+    { label: 'Liderazgo data-literate', desc: 'Los líderes de la organización interpretan dashboards, hacen preguntas basadas en datos y exigen evidencia cuantitativa.' },
     { label: 'IA como acelerador estratégico', desc: 'La IA no reemplaza al equipo de BI — amplifica su capacidad. Los sucesores deben dominar IA para escalar impacto.' },
   ]
 
@@ -32,7 +32,7 @@ export default function HPO() {
           <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--navy)', marginBottom: 6 }}>HPO & Data-Driven Organization</div>
           <div style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, maxWidth: 680 }}>
             El Plan de Sucesión de BI está diseñado para construir una organización de alto desempeño (HPO) data-driven.
-            Basado en el modelo HPO de André de Waal (2012), los 5 pilares organizan el desarrollo del talento en PNS-PR.
+            Basado en el modelo HPO de André de Waal (2012), los 5 pilares organizan el desarrollo del talento en la organización.
           </div>
         </div>
 

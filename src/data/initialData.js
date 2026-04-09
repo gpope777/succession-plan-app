@@ -1,7 +1,7 @@
 export const initialData = {
   meta: {
     department: 'Business Intelligence',
-    organization: 'Provider Network Solutions PR',
+    organization: 'La Organización',
     period: 'Spring 2026',
     nextReview: 'Q2 2026',
     responsible: 'People Operations',
@@ -29,7 +29,7 @@ export const initialData = {
       ],
       nineBox: { performance: 4, potential: 4 },
       gaps: [
-        { name: 'Power BI avanzado', detail: 'Usa Tableau; PNS-PR opera en Power BI', severity: 'Crítica' },
+        { name: 'Power BI avanzado', detail: 'Usa Tableau; la organización opera en Power BI', severity: 'Crítica' },
         { name: 'Certificación PMP / Gestión de proyectos', detail: 'No evidenciada en resume', severity: 'Crítica' },
         { name: 'Capacitación en IA generativa y analítica', detail: 'No evidenciada — competencia estratégica 2025', severity: 'Crítica' },
         { name: 'Manejo de presupuesto y planificación operacional', detail: 'Requiere mayor exposición a nivel director', severity: 'Alta' },
@@ -75,7 +75,7 @@ export const initialData = {
       strengths: [
         'SQL + Power BI activos',
         'RAF analytics',
-        '7 años contexto interno PNS-PR',
+        '7 años contexto interno en la organización',
       ],
       nineBox: { performance: 4, potential: 4 },
       gaps: [
@@ -160,7 +160,7 @@ export const initialData = {
     {
       id: 'A3',
       code: 'Colaborador A3',
-      currentPosition: 'Analista 3 — Business Intelligence (Interno PNS-PR)',
+      currentPosition: 'Analista 3 — Business Intelligence (Interno)',
       department: 'Analítica de datos · RAF · Claims · PMG · Finanzas',
       readinessStatus: 'Listo pronto',
       readinessPercentage: 62,
@@ -201,7 +201,7 @@ export const initialData = {
           phase: 3, duration: '12–18 meses',
           actions: [
             { text: 'Liderar proyecto de analítica financiera de alto impacto', status: 'pending' },
-            { text: 'Desarrollar visión de BI financiero para PNS-PR', status: 'pending' },
+            { text: 'Desarrollar visión de BI financiero para la organización', status: 'pending' },
           ],
         },
       ],

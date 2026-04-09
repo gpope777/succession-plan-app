@@ -8,6 +8,7 @@ const EMPTY_FORM = {
   certificaciones: [], certificaciones_notas: '',
   idiomas: { es_read: null, es_oral: null, es_write: null, en_read: null, en_oral: null, en_write: null },
   desempeno: { d1: null, d2: null, d3: null, d4: null, d5: null },
+  desempeno_comentarios: '',
   potencial: { p1: null, p2: null, p3: null },
   fortalezas: [], fortalezas_comentarios: '',
   areas_desarrollo: [], areas_comentarios: '',
@@ -23,7 +24,7 @@ const FORTALEZAS = [
   'Pensamiento crítico y analítico', 'Adaptabilidad y aprendizaje rápido',
   'Documentación y cumplimiento de SOPs', 'Liderazgo informal del equipo',
   'Data governance y calidad de datos', 'Storytelling con datos y visualizaciones',
-  'Orientación a resultados', 'Integridad y alineación a valores PNS-PR',
+  'Orientación a resultados', 'Integridad y alineación a valores organizacionales',
   'Gestión de relaciones interdepartamentales', 'Mentoría de pares y analistas nuevos',
 ]
 
@@ -221,6 +222,7 @@ export default function TalentCardForm({ data, updateCollaborator, addCollaborat
       certificaciones_notas: d.certificaciones_notas || '',
       idiomas: { es_read: null, es_oral: null, es_write: null, en_read: null, en_oral: null, en_write: null, ...(d.idiomas || {}) },
       desempeno: { d1: null, d2: null, d3: null, d4: null, d5: null, ...(d.desempeno || {}) },
+      desempeno_comentarios: d.desempeno_comentarios || '',
       potencial: { p1: null, p2: null, p3: null, ...(d.potencial || {}) },
       fortalezas: d.fortalezas || [],
       fortalezas_comentarios: d.fortalezas_comentarios || '',
@@ -295,7 +297,7 @@ export default function TalentCardForm({ data, updateCollaborator, addCollaborat
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
           <div>
             <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--navy)', marginBottom: 4 }}>Talent Card</div>
-            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Departamento de Business Intelligence · Plan de Sucesión PNS-PR</div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Departamento de Business Intelligence · Plan de Sucesión</div>
           </div>
           <div style={{ textAlign: 'right' }}>
             <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>Fecha de revisión</div>
@@ -373,7 +375,7 @@ export default function TalentCardForm({ data, updateCollaborator, addCollaborat
             </div>
           </div>
           <div>
-            <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: .5, color: 'var(--text-muted)', marginBottom: 8 }}>Tiempo total en PNS-PR</div>
+            <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: .5, color: 'var(--text-muted)', marginBottom: 8 }}>Tiempo total en la organización</div>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {['< 1 año', '1–2 años', '2–5 años', '5–10 años', '10+ años'].map(opt => (
                 <Pill key={opt} label={opt} selected={form.tiempo_pns === opt} onToggle={() => set('tiempo_pns', form.tiempo_pns === opt ? null : opt)} />
@@ -526,6 +528,25 @@ export default function TalentCardForm({ data, updateCollaborator, addCollaborat
                 )
               })}
             </div>
+          </div>
+          <div style={{ marginTop: 12 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 6, letterSpacing: .6 }}>Comentarios sobre el desempeño</div>
+            <textarea
+              value={form.desempeno_comentarios}
+              onChange={e => set('desempeno_comentarios', e.target.value)}
+              placeholder="Describe logros concretos, áreas de oportunidad, contexto de las puntuaciones o cualquier observación relevante sobre el desempeño del colaborador..."
+              rows={4}
+              style={{
+                width: '100%', boxSizing: 'border-box',
+                border: '1px solid var(--border)', borderRadius: 8,
+                padding: '10px 12px', fontSize: 13, color: 'var(--text)',
+                fontFamily: 'Inter, sans-serif', lineHeight: 1.55,
+                resize: 'vertical', outline: 'none',
+                background: 'var(--gray-1)',
+              }}
+              onFocus={e => e.target.style.borderColor = 'var(--teal)'}
+              onBlur={e => e.target.style.borderColor = 'var(--border)'}
+            />
           </div>
         </Sec>
 

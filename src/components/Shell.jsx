@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { exportJSON, importJSON, exportFullPDF, exportDocx } from '../utils/exports'
 
-export default function Shell({ meta, adminMode, onAdminToggle, data, onImport }) {
+export default function Shell({ meta, deptName, adminMode, onAdminToggle, data, onImport, onReset, onGuiaOpen }) {
   const fileRef = useRef()
 
   const handleImport = (e) => {
@@ -19,11 +19,10 @@ export default function Shell({ meta, adminMode, onAdminToggle, data, onImport }
         </svg>
       </div>
       <div>
-        <div className="logo-text">Provider Network Solutions</div>
-        <div className="logo-sub">Puerto Rico</div>
+        <div className="logo-text">Plan de Sucesión</div>
       </div>
       <div className="shell-div"/>
-      <div className="shell-title">Plan de Sucesión — {meta.department}</div>
+      <div className="shell-title">Plan de Sucesión {deptName ? `— ${deptName}` : ''}</div>
       <div className="shell-badge">{meta.period}</div>
 
       <div className="shell-actions">
@@ -44,6 +43,18 @@ export default function Shell({ meta, adminMode, onAdminToggle, data, onImport }
         <button className="btn btn-ghost" onClick={() => exportDocx(data)} title="Exportar plan completo como Word">
           ↓ Word
         </button>
+        {onReset && (
+          <button className="btn btn-ghost" onClick={onReset} title="Resetear datos del departamento activo" style={{ color: '#fca5a5' }}>
+            ⚠️ Reset
+          </button>
+        )}
+        <div className="shell-div"/>
+        <button
+          className="btn btn-ghost"
+          onClick={onGuiaOpen}
+          title="Guía de uso del portal"
+          style={{ fontWeight: 700, fontSize: 15, padding: '6px 12px', borderRadius: '50%', minWidth: 34, minHeight: 34, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >?</button>
       </div>
     </div>
   )

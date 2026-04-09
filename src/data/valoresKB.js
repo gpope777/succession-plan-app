@@ -837,9 +837,9 @@ En las organizaciones de Alto Desempeño (HPO, De Waal), los valores no son pala
     triggers: ['valores de pns', 'valores de la empresa', 'nuestros valores', 'los 7 valores',
                'valores pns pr', 'valores del departamento', 'que valores tenemos',
                'trabajo equipo responsabilidad innovacion flexibilidad aprendizaje integridad transparencia'],
-    title: '🏢 Los 7 Valores de PNS-PR',
-    authors: 'Plan de Sucesión BI — Provider Network Solutions Puerto Rico (2025)',
-    response: `Los 7 valores centrales del Departamento de Business Intelligence de PNS-PR, alineados al marco HPO de De Waal:
+    title: '🏢 Los 7 Valores de la Organización',
+    authors: 'Plan de Sucesión BI — La Organización (2025)',
+    response: `Los 7 valores centrales del Departamento de Business Intelligence, alineados al marco HPO de De Waal:
 
 1. **🤝 Trabajo en Equipo y Colaboración** — Colaborar efectivamente, compartir conocimiento sin competir, construir inclusión.
 

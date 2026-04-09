@@ -1,44 +1,53 @@
-const GROUPS = [
+export const GROUPS = [
   {
     id: 'resumen',
-    label: 'Resumen',
+    label: 'Panel Principal',
     icon: '🏠',
-    tabs: [{ id: 'home', label: 'Resumen del Plan', icon: 'H' }],
+    tabs: [{ id: 'home', label: 'Panel Principal', icon: '🏠' }],
   },
   {
     id: 'evaluacion',
-    label: 'Evaluación',
-    icon: '📋',
+    label: 'Área de Evaluación',
+    icon: '👥',
     tabs: [
-      { id: 'talentcard', label: 'Talent Card',    icon: 'TC' },
-      { id: 'rubricas',   label: 'Rúbricas',       icon: '📐' },
-      { id: 'talent',     label: 'Perfiles & IDP', icon: 'PP' },
+      { id: 'talentcard', label: 'Nueva Talent Card',         icon: '➕' },
+      { id: 'rubricas',   label: 'Marco de Evaluación',      icon: '📐' },
+      { id: 'talent',     label: 'Perfiles del Equipo',      icon: '👤' },
+      { id: 'historial',  label: 'Historial de Evaluaciones', icon: '📋' },
     ],
   },
   {
     id: 'diagnostico',
-    label: 'Diagnóstico',
-    icon: '🔍',
+    label: 'Análisis del Pipeline',
+    icon: '📊',
     tabs: [
-      { id: 'banca',   label: 'Banca de Talento',    icon: 'BT' },
-      { id: 'calidad', label: 'Análisis de Calidad', icon: 'CA' },
+      { id: 'desarrollo', label: 'Centro de Desarrollo', icon: '📈' },
+      { id: 'calidad',    label: 'Tablero Estratégico',  icon: '📊' },
+      { id: 'basedatos',  label: 'Base de Datos',        icon: '🗄️' },
+      { id: 'roi',        label: 'ROI del Plan',         icon: '💰' },
     ],
   },
   {
     id: 'cultura',
-    label: 'Cultura & Valores',
-    icon: '🧭',
+    label: 'Salud Organizacional',
+    icon: '❤️',
     tabs: [
-      { id: 'valores',   label: 'Guía de Valores',       icon: 'V'  },
-      { id: 'clima',     label: 'Clima Cultural',         icon: '🌡️' },
-      { id: 'liderazgo', label: 'Eval. de Liderazgo',     icon: '🧭' },
+      { id: 'valores',   label: 'Marco de Valores',        icon: '🧭' },
+      { id: 'clima',     label: 'Evaluación de Clima',     icon: '🌡️' },
+      { id: 'liderazgo', label: 'Evaluación de Liderazgo', icon: '⭐' },
     ],
   },
   {
     id: 'feedback',
-    label: 'Feedback',
-    icon: '📬',
-    tabs: [{ id: 'feedback', label: 'Buzón de Feedback', icon: '📬' }],
+    label: 'Buzón de Feedback',
+    icon: '💬',
+    tabs: [{ id: 'feedback', label: 'Buzón de Feedback', icon: '💬' }],
+  },
+  {
+    id: 'referencias',
+    label: 'Referencias',
+    icon: '📚',
+    tabs: [{ id: 'referencias', label: 'Referencias', icon: '📚' }],
   },
 ]
 

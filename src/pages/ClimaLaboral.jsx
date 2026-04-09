@@ -136,7 +136,7 @@ export default function ClimaLaboral({ adminMode }) {
   return (
     <div style={{ maxWidth: 860, margin: '0 auto', padding: '28px 20px 80px' }}>
       <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', margin: '0 0 6px' }}>🌡️ Cuestionario de Clima Cultural</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', margin: '0 0 6px' }}>🌡️ Evaluación de Clima</h1>
         <p style={{ margin: 0, fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>
           Instrumento basado en el modelo Denison, Seguridad Psicológica (Edmondson, 1999) y pilares HPO.
           Identifica fortalezas y áreas de mejora en la cultura del departamento.

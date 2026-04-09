@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import EditModal from '../components/EditModal'
+
 const COLOR_MAP = { teal: 'var(--teal)', purple: 'var(--purple)', amber: 'var(--amber)', blue: 'var(--blue)', coral: 'var(--coral)' }
 
 function ReadinessBadge({ status }) {
@@ -5,7 +8,9 @@ function ReadinessBadge({ status }) {
   return <span className={`chip chip-${map[status] || 'blue'}`}>{status}</span>
 }
 
-export default function BancaTalento({ data, adminMode, onTabChange }) {
+export default function BancaTalento({ data, adminMode, updateCollaborator, onTabChange }) {
+  const [editingId, setEditingId] = useState(null)
+  const editingCollab = editingId ? data.collaborators.find(c => c.id === editingId) : null
   const sorted = [...data.collaborators].sort((a, b) => a.priority - b.priority)
 
   return (
@@ -14,7 +19,7 @@ export default function BancaTalento({ data, adminMode, onTabChange }) {
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--navy)' }}>Banca de Talento</div>
+            <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--navy)' }}>Pipeline de Sucesión</div>
             <div style={{ fontSize: 14, color: 'var(--text-muted)', marginTop: 3 }}>{data.collaborators.length} colaboradores evaluados · Ordenados por prioridad de desarrollo</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
@@ -47,6 +52,12 @@ export default function BancaTalento({ data, adminMode, onTabChange }) {
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                     <span style={{ fontWeight: 600, fontSize: 15 }}>{c.code}</span>
+                    {adminMode && (
+                      <button
+                        onClick={() => setEditingId(c.id)}
+                        style={{ fontSize: 11, fontWeight: 600, background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 6, padding: '2px 8px', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}
+                      >✏️ Editar</button>
+                    )}
                     <ReadinessBadge status={c.readinessStatus} />
                     <span className="chip chip-purple">→ {c.targetPosition}</span>
                     <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{c.timelineMonths}</span>
@@ -137,6 +148,14 @@ export default function BancaTalento({ data, adminMode, onTabChange }) {
         })}
 
       </div>
+
+      {editingCollab && (
+        <EditModal
+          collab={editingCollab}
+          onSave={updateCollaborator}
+          onClose={() => setEditingId(null)}
+        />
+      )}
     </div>
   )
 }

@@ -10,7 +10,7 @@ export default function StatusBar({ data, adminMode }) {
       <div className="si"><div className="sdot" style={{ background: 'var(--blue)' }} />Próxima revisión: {data.meta.nextReview}</div>
       {adminMode && <div className="si"><div className="sdot" style={{ background: 'var(--purple)' }} />Modo HR activo</div>}
       <div style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--text-muted)' }}>
-        People Operations · PNS-PR · Confidencial
+        People Operations · Confidencial
       </div>
     </div>
   )

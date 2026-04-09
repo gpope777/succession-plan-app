@@ -215,7 +215,7 @@ export default function Valores() {
           <div style={{ fontSize: 18, fontWeight: 600, color: 'var(--navy)', marginBottom: 6 }}>Guía de Valores de Apoyo</div>
           <div style={{ background: 'white', border: '1px solid var(--border)', borderLeft: '4px solid var(--teal)', borderRadius: 10, padding: '12px 18px', maxWidth: 700, marginBottom: 16 }}>
             <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.65, textAlign: 'center' }}>
-              Cuando un valor está <strong style={{ color: 'var(--text)' }}>bajo presión o comprometido</strong>, otros valores de PNS-PR pueden actuar como ancla.
+              Cuando un valor está <strong style={{ color: 'var(--text)' }}>bajo presión o comprometido</strong>, otros valores de la organización pueden actuar como ancla.
               Esta guía, basada en literatura científica organizacional, te indica <strong style={{ color: 'var(--text)' }}>qué valores activar y qué acciones concretas tomar.</strong>
             </p>
           </div>

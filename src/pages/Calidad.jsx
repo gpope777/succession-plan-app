@@ -27,7 +27,7 @@ export default function Calidad({ data }) {
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--navy)' }}>Análisis de Calidad del Pipeline</div>
+            <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--navy)' }}>Tablero Estratégico</div>
             <div style={{ fontSize: 14, color: 'var(--text-muted)', marginTop: 3 }}>Vista ejecutiva — {meta.period}</div>
           </div>
         </div>

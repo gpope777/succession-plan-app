@@ -9,7 +9,7 @@ export default function Marco({ data }) {
       <div className="page-inner">
 
         <div style={{ marginBottom: 24 }}>
-          <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--navy)', marginBottom: 6 }}>Marco de Competencias PNS-PR</div>
+          <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--navy)', marginBottom: 6 }}>Marco de Competencias</div>
           <div style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, maxWidth: 680 }}>
             El marco define las competencias esperadas en tres niveles: Analista, Supervisor y Director. Sirve como base para
             las evaluaciones de sucesión, los IDPs y las entrevistas STAR. Cada competencia está anclada a un valor organizacional.

@@ -491,7 +491,7 @@ const DIMS = [
     weightLabel: '15%',
     icon: '✅',
     heatmapKey: 'Cumplimiento y estandarización (HIPAA/SOPs)',
-    definition: 'Adherencia consistente a los Procedimientos Operativos Estándar (SOPs), regulaciones HIPAA/FWA, políticas de privacidad, estándares de calidad de datos y cumplimiento regulatorio aplicable al ecosistema de salud en Puerto Rico.',
+    definition: 'Adherencia consistente a los Procedimientos Operativos Estándar (SOPs), regulaciones HIPAA/FWA, políticas de privacidad, estándares de calidad de datos y cumplimiento regulatorio aplicable al ecosistema de salud.',
     evalAxis: 'Adhesión a SOPs, conocimiento regulatorio, documentación, cultura de compliance, gestión de riesgos de cumplimiento.',
     levels: [
       {
