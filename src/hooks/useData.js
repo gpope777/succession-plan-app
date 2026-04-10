@@ -140,6 +140,17 @@ export function useData() {
     }
   }
 
+  const deleteEvaluation = (collabId, evalId) =>
+    updDept(activeDeptId, prev => ({
+      ...prev,
+      collaborators: prev.collaborators.map(c =>
+        c.id !== collabId ? c : {
+          ...c,
+          evaluationHistory: (c.evaluationHistory || []).filter(ev => ev.id !== evalId),
+        }
+      ),
+    }))
+
   const updateRubricEvaluation = (collabId, rubricData) =>
     updDept(activeDeptId, prev => ({
       ...prev,
@@ -220,6 +231,7 @@ export function useData() {
     addCollaborator,
     updateMeta,
     updateHeatmap,
+    deleteEvaluation,
     updateRubricEvaluation,
     importData,
     resetData,

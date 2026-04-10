@@ -50,7 +50,7 @@ function NineBoxMini({ perf, pot }) {
   )
 }
 
-export default function HistorialEval({ data, onTabChange, onSelectCollab }) {
+export default function HistorialEval({ data, adminMode, deleteEvaluation, onTabChange, onSelectCollab }) {
   const { collaborators } = data
   const [filterCollab, setFilterCollab] = useState('all')
   const [filterType,   setFilterType]   = useState('all')
@@ -347,17 +347,37 @@ export default function HistorialEval({ data, onTabChange, onSelectCollab }) {
                         )}
                       </div>
 
-                      <button
-                        onClick={() => goToProfile(ev.collabId)}
-                        style={{
-                          display: 'inline-flex', alignItems: 'center', gap: 6,
-                          padding: '8px 16px', borderRadius: 7, border: 'none',
-                          background: 'var(--navy)', color: 'white',
-                          fontSize: 13, fontWeight: 600, cursor: 'pointer',
-                        }}
-                      >
-                        👤 Ver perfil de {ev.collabCode} →
-                      </button>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <button
+                          onClick={() => goToProfile(ev.collabId)}
+                          style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 6,
+                            padding: '8px 16px', borderRadius: 7, border: 'none',
+                            background: 'var(--navy)', color: 'white',
+                            fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                          }}
+                        >
+                          👤 Ver perfil de {ev.collabCode} →
+                        </button>
+                        {adminMode && (
+                          <button
+                            onClick={() => {
+                              if (window.confirm(`¿Eliminar esta evaluación de ${ev.collabCode} (${ev.date})?`)) {
+                                deleteEvaluation(ev.collabId, ev.id)
+                                setExpanded(null)
+                              }
+                            }}
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: 6,
+                              padding: '8px 14px', borderRadius: 7,
+                              border: '1px solid #fca5a5', background: '#fee2e2',
+                              color: '#dc2626', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                            }}
+                          >
+                            🗑️ Eliminar evaluación
+                          </button>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>

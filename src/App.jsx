@@ -37,7 +37,7 @@ export default function App() {
     deptDataMap, addDepartment, renameDepartment, deleteDepartment,
     pendingDelete, undoDelete, confirmDelete,
     data, updateCollaborator, addCollaborator, updateHeatmap,
-    updateRubricEvaluation, importData, resetData,
+    updateRubricEvaluation, deleteEvaluation, importData, resetData,
   } = useData()
 
   const handleDeptChange = (deptId) => {
@@ -50,7 +50,7 @@ export default function App() {
 
   const pageProps = {
     data, adminMode, updateCollaborator, addCollaborator,
-    updateHeatmap, updateRubricEvaluation,
+    updateHeatmap, updateRubricEvaluation, deleteEvaluation,
     selectedCollab,
     onSelectCollab: setSelectedCollab,
     onTabChange: setActiveTab,
